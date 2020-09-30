@@ -1,6 +1,8 @@
 import { Grid, Container, Segment } from 'semantic-ui-react'
 import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 
+import TitleInput from '../components/title-input'
+
 const textAreaRows = 3
 
 const cell = {
@@ -36,10 +38,7 @@ export default function Editor() {
                 <Grid.Row>
                     <Grid.Column>
                         <Grid.Row>
-                            <Input
-                                style={{ width: '100%' }}
-                                icon="question"
-                                placeholder='Title' />
+                            <TitleInput />
                         </Grid.Row>
                         <Grid.Row>
                             <Input

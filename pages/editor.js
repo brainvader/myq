@@ -3,6 +3,7 @@ import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 
 import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
+import QuestionInput from '../components/question-input'
 import QuestionMenu from '../components/question-menu'
 
 const textAreaRows = 3
@@ -64,9 +65,7 @@ export default function Editor() {
                                         size='mini'
                                         circular icon='plus' />
 
-                                    <Form>
-                                        <TextArea rows={textAreaRows} />
-                                    </Form>
+                                    <QuestionInput />
 
                                     <QuestionMenu />
 

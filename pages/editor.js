@@ -3,6 +3,7 @@ import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 
 import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
+import QuestionMenu from '../components/question-menu'
 
 const textAreaRows = 3
 
@@ -57,32 +58,23 @@ export default function Editor() {
                             </Segment>
 
                             <Segment style={cell} className='cell'>
-                                <Button
-                                    style={addBeforeBtn}
-                                    size='mini'
-                                    circular icon='plus' />
+                                <div>
+                                    <Button
+                                        style={addBeforeBtn}
+                                        size='mini'
+                                        circular icon='plus' />
 
-                                <Form>
-                                    <TextArea rows={textAreaRows} />
-                                </Form>
-                                <div style={cellMenu}>
-                                    <Button.Group>
-                                        <Button icon='code' />
-                                        <Button icon='dollar sign' />
-                                    </Button.Group>
-                                    {'    '}
-                                    <Button.Group>
-                                        <Button icon='minus' />
-                                        <Button icon='caret up' />
-                                        <Button icon='caret down' />
-                                    </Button.Group>
+                                    <Form>
+                                        <TextArea rows={textAreaRows} />
+                                    </Form>
+
+                                    <QuestionMenu />
+
+                                    <Button
+                                        style={addAfterBtn}
+                                        size='mini'
+                                        circular icon='plus' />
                                 </div>
-
-
-                                <Button
-                                    style={addAfterBtn}
-                                    size='mini'
-                                    circular icon='plus' />
                             </Segment>
 
 

@@ -3,11 +3,9 @@ import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 
 const textAreaRows = 3
 
-const cellMargin = 2
-
 const cell = {
-    marginTop: `${cellMargin}em`,
-    marginBottom: `${cellMargin}em`,
+    position: 'relative',
+    paddingTop: '2em'
 }
 
 const cellMenu = {
@@ -15,10 +13,19 @@ const cellMenu = {
     marginBottom: `1em`
 }
 
-const addCellButton = {
+const addCellBtn = {
     position: 'absolute',
     zIndex: 1,
+}
+
+const addBeforeBtn = {
+    ...addCellBtn,
     transform: `translate(-50%, -50%)`
+}
+
+const addAfterBtn = {
+    ...addCellBtn,
+    transform: `translate(-50%, 0%)`
 }
 
 
@@ -31,6 +38,7 @@ export default function Editor() {
                         <Grid.Row>
                             <Input
                                 style={{ width: '100%' }}
+                                icon="question"
                                 placeholder='Title' />
                         </Grid.Row>
                         <Grid.Row>
@@ -55,69 +63,70 @@ export default function Editor() {
                                 <Label attached='top left'>Question</Label>
                             </Segment>
 
-                            <Segment.Group style={cell}>
+                            <Segment style={cell} className='cell'>
                                 <Button
-                                    style={addCellButton}
+                                    style={addBeforeBtn}
                                     size='mini'
                                     circular icon='plus' />
 
-                                <Segment compact>
-                                    <Form>
-                                        <TextArea rows={textAreaRows} />
-                                    </Form>
-                                    <div style={cellMenu}>
-                                        <Button.Group>
-                                            <Button icon='code' />
-                                            <Button icon='dollar sign' />
-                                        </Button.Group>
-                                        {'    '}
-                                        <Button.Group>
-                                            <Button icon='minus' />
-                                        </Button.Group>
-                                    </div>
-                                </Segment>
+                                <Form>
+                                    <TextArea rows={textAreaRows} />
+                                </Form>
+                                <div style={cellMenu}>
+                                    <Button.Group>
+                                        <Button icon='code' />
+                                        <Button icon='dollar sign' />
+                                    </Button.Group>
+                                    {'    '}
+                                    <Button.Group>
+                                        <Button icon='minus' />
+                                        <Button icon='caret up' />
+                                        <Button icon='caret down' />
+                                    </Button.Group>
+                                </div>
+
+
                                 <Button
-                                    style={addCellButton}
+                                    style={addAfterBtn}
                                     size='mini'
                                     circular icon='plus' />
-                            </Segment.Group>
-
+                            </Segment>
 
 
                         </Segment.Group>
 
                         <Segment.Group>
-
                             <Segment>
                                 <Label attached='top left'>Answer</Label>
                             </Segment>
 
-                            <Segment.Group style={cell}>
+                            <Segment style={cell}>
                                 <Button
-                                    style={addCellButton}
+                                    style={addBeforeBtn}
                                     size='mini'
                                     circular icon='plus' />
-                                <Segment compact>
-                                    <Form>
-                                        <TextArea rows={textAreaRows} />
-                                    </Form>
-                                    <div style={cellMenu}>
-                                        <Button.Group>
-                                            <Button icon='code' />
-                                            <Button icon='dollar sign' />
-                                            <Button icon='linkify' />
-                                        </Button.Group>
-                                        {' '}
-                                        <Button.Group>
-                                            <Button icon='minus' />
-                                        </Button.Group>
-                                    </div>
-                                </Segment>
+
+                                <Form>
+                                    <TextArea rows={textAreaRows} />
+                                </Form>
+                                <div style={cellMenu}>
+                                    <Button.Group>
+                                        <Button icon='code' />
+                                        <Button icon='dollar sign' />
+                                        <Button icon='linkify' />
+                                    </Button.Group>
+                                    {' '}
+                                    <Button.Group>
+                                        <Button icon='minus' />
+                                        <Button icon='caret up' />
+                                        <Button icon='caret down' />
+                                    </Button.Group>
+                                </div>
                                 <Button
-                                    style={addCellButton}
+                                    style={addAfterBtn}
                                     size='mini'
                                     circular icon='plus' />
-                            </Segment.Group>
+                            </Segment>
 
                         </Segment.Group>
                     </Grid.Column>

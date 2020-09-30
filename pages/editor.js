@@ -2,6 +2,7 @@ import { Grid, Container, Segment } from 'semantic-ui-react'
 import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 
 import TitleInput from '../components/title-input'
+import TagInput from '../components/tag-input'
 
 const textAreaRows = 3
 
@@ -41,14 +42,7 @@ export default function Editor() {
                             <TitleInput />
                         </Grid.Row>
                         <Grid.Row>
-                            <Input
-                                style={{ width: '100%' }}
-                                icon='tags'
-                                iconPosition='left'
-                                label={{ tag: true, content: 'Add Tag' }}
-                                labelPosition='right'
-                                placeholder='Enter tags'
-                            />
+                            <TagInput />
                         </Grid.Row>
                     </Grid.Column>
                 </Grid.Row>

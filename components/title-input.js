@@ -1,9 +1,13 @@
 import { Input } from 'semantic-ui-react'
 
+const style = {
+    width: '100%'
+}
+
 export default function TitleInput() {
     return (
         <Input
-            style={{ width: '100%' }}
+            style={style}
             icon="question"
             placeholder='Title' />
     )

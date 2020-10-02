@@ -4,6 +4,7 @@ import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
 import QuestionInput from '../components/question-input'
+import AnswerInput from '../components/answer-input'
 
 const textAreaRows = 3
 
@@ -53,41 +54,8 @@ export default function Editor() {
                     <Grid.Column textAlign='center'>
 
                         <QuestionInput />
+                        <AnswerInput cellStyle={cell} />
 
-                        <Segment.Group>
-                            <Segment>
-                                <Label attached='top left'>Answer</Label>
-                            </Segment>
-
-                            <Segment style={cell}>
-                                <Button
-                                    style={addBeforeBtn}
-                                    size='mini'
-                                    circular icon='plus' />
-
-                                <Form>
-                                    <TextArea rows={textAreaRows} />
-                                </Form>
-                                <div style={cellMenu}>
-                                    <Button.Group>
-                                        <Button icon='code' />
-                                        <Button icon='dollar sign' />
-                                        <Button icon='linkify' />
-                                    </Button.Group>
-                                    {' '}
-                                    <Button.Group>
-                                        <Button icon='minus' />
-                                        <Button icon='caret up' />
-                                        <Button icon='caret down' />
-                                    </Button.Group>
-                                </div>
-                                <Button
-                                    style={addAfterBtn}
-                                    size='mini'
-                                    circular icon='plus' />
-                            </Segment>
-
-                        </Segment.Group>
                     </Grid.Column>
                 </Grid.Row>
 

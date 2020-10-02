@@ -53,7 +53,7 @@ export default function Editor() {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <QuestionInput />
+                        <QuestionInput cellStyle={cell} />
                         <AnswerInput cellStyle={cell} />
 
                     </Grid.Column>

@@ -4,11 +4,6 @@ import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
 import CellForm from '../components/cell-form'
 
-const cell = {
-    position: 'relative',
-    paddingTop: '2em'
-}
-
 export default function Editor() {
     return (
         <Container>
@@ -28,8 +23,8 @@ export default function Editor() {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <CellForm name='Question' cellStyle={cell} />
-                        <CellForm name='Answer' cellStyle={cell} />
+                        <CellForm name='Question' />
+                        <CellForm name='Answer' />
 
                     </Grid.Column>
                 </Grid.Row>

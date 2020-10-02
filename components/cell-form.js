@@ -4,7 +4,12 @@ import CellMenu from './cell-menu'
 import CellInput from './cell-input'
 import { AddBeforeButton, AddAfterButton } from './cell-button'
 
-export default function CellForm({ name, cellStyle }) {
+const cellStyle = {
+    position: 'relative',
+    paddingTop: '2em'
+}
+
+export default function CellForm({ name }) {
     return (
         <Segment.Group>
 

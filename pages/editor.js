@@ -4,7 +4,6 @@ import { Button, Input, Label, Form, TextArea } from 'semantic-ui-react'
 import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
 import QuestionInput from '../components/question-input'
-import QuestionMenu from '../components/question-menu'
 
 const textAreaRows = 3
 
@@ -52,32 +51,8 @@ export default function Editor() {
 
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
-                        <Segment.Group>
 
-                            <Segment>
-                                <Label attached='top left'>Question</Label>
-                            </Segment>
-
-                            <Segment style={cell} className='cell'>
-                                <div>
-                                    <Button
-                                        style={addBeforeBtn}
-                                        size='mini'
-                                        circular icon='plus' />
-
-                                    <QuestionInput />
-
-                                    <QuestionMenu />
-
-                                    <Button
-                                        style={addAfterBtn}
-                                        size='mini'
-                                        circular icon='plus' />
-                                </div>
-                            </Segment>
-
-
-                        </Segment.Group>
+                        <QuestionInput />
 
                         <Segment.Group>
                             <Segment>

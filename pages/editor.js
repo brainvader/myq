@@ -2,8 +2,7 @@ import { Grid, Container } from 'semantic-ui-react'
 
 import TitleInput from '../components/title-input'
 import TagInput from '../components/tag-input'
-import QuestionInput from '../components/question-input'
-import AnswerInput from '../components/answer-input'
+import CellForm from '../components/cell-form'
 
 const cell = {
     position: 'relative',
@@ -29,8 +28,8 @@ export default function Editor() {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <QuestionInput cellStyle={cell} />
-                        <AnswerInput cellStyle={cell} />
+                        <CellForm name='Question' cellStyle={cell} />
+                        <CellForm name='Answer' cellStyle={cell} />
 
                     </Grid.Column>
                 </Grid.Row>

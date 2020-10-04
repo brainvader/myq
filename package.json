@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "dgraph": "docker run --name myq -v myq:/myq --rm -it -p 8080:8080 dgraph/standalone:v20.03.0"
   },
   "dependencies": {
     "next": "9.5.3",

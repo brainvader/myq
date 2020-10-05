@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "dgraph": "docker run --name myq -v myq:/myq --rm -it -p 8080:8080 dgraph/standalone:v20.03.0"
+    "dgraph": "docker run --name myq -v myq:/dgraph --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000  dgraph/standalone:v20.03.0"
   },
   "dependencies": {
     "dgraph-js-http": "^20.7.1",

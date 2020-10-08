@@ -3,15 +3,13 @@ import QuizList from '../../components/editor/quiz-list'
 import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search } from 'semantic-ui-react'
 
-import useSwr from 'swr'
-
-const fetcher = (url) => fetch(url).then((res) => res.json())
+import { useQuizzes } from '../../lib/hooks'
 
 export default function Home() {
-    const { data, error } = useSwr(`/api/quizzes`, fetcher)
+    const { quizzes, isLoading, isError } = useQuizzes()
 
-    if (error) return <div>failed to load</div>
-    if (!data) return <div>loading...</div>
+    if (isError) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
 
     return (
         <div>
@@ -36,7 +34,7 @@ export default function Home() {
                 </Grid.Row>
 
                 <Grid.Row>
-                    <QuizList quizzes={data} />
+                    <QuizList quizzes={quizzes} />
                 </Grid.Row>
 
             </Grid>

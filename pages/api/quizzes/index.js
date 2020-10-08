@@ -23,7 +23,7 @@ const quizzes = [
         title: 'MonQとは何でしょうか?',
         user: 'brainvader',
         version: '0.0.1',
-        date: getTimeStamp(),
+        date: '2020-10-8T18:01:00',
         answer: [
             {
                 type: 'text',
@@ -44,7 +44,7 @@ const quizzes = [
         title: 'put on holdとは?',
         user: 'brainvader',
         version: '0.0.1',
-        date: getTimeStamp(),
+        date: '2020-10-8T18:01:01',
         answer: [
             {
                 type: 'text',

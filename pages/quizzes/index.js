@@ -9,6 +9,10 @@ const CreateQuizButton = () => {
     return <Button icon='plus' />
 }
 
+const DeleteQuizButton = () => {
+    return <Button icon='delete' />
+}
+
 export default function Home() {
     const { quizzes, isLoading, isError } = useQuizzes()
 
@@ -26,7 +30,7 @@ export default function Home() {
                     <Grid.Column textAlign='left'>
                         <Button.Group>
                             <CreateQuizButton />
-                            <Button icon='delete' />
+                            <DeleteQuizButton />
                             <Button icon='sync' />
                         </Button.Group>
                     </Grid.Column>

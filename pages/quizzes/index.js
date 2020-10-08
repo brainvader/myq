@@ -5,6 +5,10 @@ import { Button, Search } from 'semantic-ui-react'
 
 import { useQuizzes } from '../../lib/hooks'
 
+const CreateQuizButton = () => {
+    return <Button icon='plus' />
+}
+
 export default function Home() {
     const { quizzes, isLoading, isError } = useQuizzes()
 
@@ -21,7 +25,7 @@ export default function Home() {
 
                     <Grid.Column textAlign='left'>
                         <Button.Group>
-                            <Button icon='plus' />
+                            <CreateQuizButton />
                             <Button icon='delete' />
                             <Button icon='sync' />
                         </Button.Group>

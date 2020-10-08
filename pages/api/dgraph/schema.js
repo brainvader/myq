@@ -27,8 +27,9 @@ const getSchema = async (req, res) => {
     res.end(JSON.stringify(schemaMap))
 }
 
-async function dropSchema() {
-    await dgraphClient.alter({ dropAll: true });
+const dropSchema = async (req, res) => {
+    const response = await req.dbClient.alter({ dropAll: true });
+    res.end(JSON.stringify(response.data))
 }
 
 async function setSchema(schema) {
@@ -36,5 +37,6 @@ async function setSchema(schema) {
 }
 
 handler.get(getSchema)
+handler.delete(dropSchema)
 
 export default handler;

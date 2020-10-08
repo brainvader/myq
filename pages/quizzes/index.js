@@ -1,7 +1,7 @@
 import QuizList from '../../components/editor/quiz-list'
 
 import { Grid, Header } from 'semantic-ui-react'
-import { Button, Search } from 'semantic-ui-react'
+import { Button, Search, Icon } from 'semantic-ui-react'
 
 import { useQuizzes } from '../../lib/hooks'
 
@@ -13,15 +13,17 @@ const DeleteQuizButton = () => {
     return <Button icon='delete' />
 }
 
-const ReloadQuizzesButton = () => {
-    return <Button icon='sync' />
+const ReloadQuizzesButton = ({ handler }) => {
+    return <Button icon='sync' onClick={handler} />
 }
 
 export default function Home() {
-    const { quizzes, isLoading, isError } = useQuizzes()
+    const { quizzes, reload, isLoading, isError } = useQuizzes()
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
+
+    const reloadHandler = () => reload([...quizzes])
 
     return (
         <div>
@@ -35,7 +37,7 @@ export default function Home() {
                         <Button.Group>
                             <CreateQuizButton />
                             <DeleteQuizButton />
-                            <ReloadQuizzesButton />
+                            <ReloadQuizzesButton handler={reloadHandler} />
                         </Button.Group>
                     </Grid.Column>
 

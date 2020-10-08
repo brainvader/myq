@@ -16,6 +16,14 @@ const schemaMap = {
     tags: '[string]'
 }
 
+const toSchema = (schemaMap) => {
+    const initialValue = ''
+    const keys = Object.keys(schemaMap)
+    const reducer = (res, key) => `${res} ${key}: ${schemaMap[key]} . \n`
+    const schema = keys.reduce(reducer, initialValue)
+    return schema
+}
+
 const getSchema = async (req, res) => {
     const client = req.dbClient
     const initialValue = ''
@@ -32,11 +40,14 @@ const dropSchema = async (req, res) => {
     res.end(JSON.stringify(response.data))
 }
 
-async function setSchema(schema) {
-    await dgraphClient.alter({ schema: schema })
+const setSchema = async (req, res) => {
+    const schema = toSchema(schemaMap)
+    const response = await req.dbClient.alter({ schema: schema })
+    res.end(JSON.stringify(response.data))
 }
 
 handler.get(getSchema)
+handler.post(setSchema)
 handler.delete(dropSchema)
 
 export default handler;

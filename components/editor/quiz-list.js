@@ -1,6 +1,18 @@
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
 
+const EditButton = () => <Button icon='edit' />
+const RemoveButton = () => <Button icon='trash alternate outline' />
+
+const ItemControls = () => {
+    return (
+        <Button.Group>
+            <EditButton />
+            <RemoveButton />
+        </Button.Group>
+    )
+}
+
 const ListItem = ({ quiz }) => {
     return (
         <Table.Row>
@@ -13,10 +25,7 @@ const ListItem = ({ quiz }) => {
                 {quiz.tags.toString()}
             </Table.Cell>
             <Table.Cell width={2} textAlign='center'>
-                <Button.Group>
-                    <Button icon='edit' />
-                    <Button icon='trash alternate outline' />
-                </Button.Group>
+                <ItemControls />
             </Table.Cell>
         </Table.Row>
     )

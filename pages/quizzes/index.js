@@ -18,12 +18,12 @@ const ReloadQuizzesButton = ({ handler }) => {
 }
 
 export default function Home() {
-    const { quizzes, reload, isLoading, isError } = useQuizzes()
+    const { quizzes, mutate, isLoading, isError } = useQuizzes()
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
-    const reloadHandler = () => reload([...quizzes])
+    const reloadHandler = () => mutate([...quizzes])
 
     return (
         <div>

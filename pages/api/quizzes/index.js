@@ -18,52 +18,19 @@ const getTimeStamp = () => {
     return timeStamp
 }
 
-const quizzes = [
-    {
-        title: 'MonQとは何でしょうか?',
-        user: 'brainvader',
-        version: '0.0.1',
-        date: '2020-10-8T18:01:00',
-        answer: [
-            {
-                type: 'text',
-                content: 'MonQとは何でしょうか?'
-            }
-        ],
-        question: [
-            {
-                type: 'text',
-                content: 'クイズベースの学習システムです.'
-            }
-        ],
-        tags: [
-            'monq'
-        ]
-    },
-    {
-        title: 'put on holdとは?',
-        user: 'brainvader',
-        version: '0.0.1',
-        date: '2020-10-8T18:01:01',
-        answer: [
-            {
-                type: 'text',
-                content: 'put on holdとは?'
-            }
-        ],
-        question: [
-            {
-                type: 'text',
-                content: '保留する'
-            }
-        ],
-        tags: [
-            'english'
-        ]
+const quizzesQuery = `
+{
+    quizzes(func: has(title)) {
+        uid
+        title
+        date
+        tags
     }
-]
+}`
 
 const getQuizzes = async (req, res) => {
+    const result = await req.dbClient.newTxn().query(quizzesQuery)
+    const quizzes = result.data.quizzes
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify(quizzes))

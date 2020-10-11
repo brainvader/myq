@@ -11,6 +11,12 @@ const quizzesQuery = `
         uid
         title
         date
+        question {
+            uid
+        }
+        answer {
+            uid
+        }
         tags
     }
 }`

@@ -5,19 +5,6 @@ const handler = nextConnect();
 
 handler.use(middleware);
 
-const getTimeStamp = () => {
-    const date = new Date();
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate().toString().padStart(2, '0')
-    const hours = date.getHours()
-    const minutes = date.getMinutes()
-    const seconds = date.getSeconds()
-    const now = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
-    const timeStamp = new Date(now).toISOString()
-    return timeStamp
-}
-
 const quizzesQuery = `
 {
     quizzes(func: has(title)) {

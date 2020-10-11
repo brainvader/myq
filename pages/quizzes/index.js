@@ -1,12 +1,15 @@
+import { useRouter } from 'next/router'
+
 import QuizList from '../../components/editor/quiz-list'
 
 import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search, Icon } from 'semantic-ui-react'
 
 import { useQuizzes } from '../../lib/hooks'
+import { getTimeStamp } from '../../lib/utils'
 
-const CreateQuizButton = () => {
-    return <Button icon='plus' />
+const CreateQuizButton = ({ handler }) => {
+    return <Button icon='plus' onClick={handler} />
 }
 
 const DeleteQuizButton = () => {
@@ -18,12 +21,26 @@ const ReloadQuizzesButton = ({ handler }) => {
 }
 
 export default function Home() {
+    const router = useRouter()
     const { quizzes, mutate, isLoading, isError } = useQuizzes()
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
-    const reloadHandler = () => mutate([...quizzes])
+    const createHandler = async () => {
+        const body = { createdAt: getTimeStamp() }
+        const res = await fetch('/api/quizzes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+        const data = await res.json()
+        console.log(`create quiz with uid: ${data.uid}`)
+        mutate()
+        // router.push('/editor')
+    }
+
+    const reloadHandler = () => mutate()
 
     return (
         <div>
@@ -35,7 +52,7 @@ export default function Home() {
 
                     <Grid.Column textAlign='left'>
                         <Button.Group>
-                            <CreateQuizButton />
+                            <CreateQuizButton handler={createHandler} />
                             <DeleteQuizButton />
                             <ReloadQuizzesButton handler={reloadHandler} />
                         </Button.Group>

@@ -1,14 +1,28 @@
+import { mutate } from 'swr'
+
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
 
 const EditButton = () => <Button icon='edit' />
-const RemoveButton = () => <Button icon='trash alternate outline' />
+const RemoveButton = ({ handler }) => {
+    return <Button icon='trash alternate outline' onClick={handler} />
+}
 
-const ItemControls = () => {
+const ItemControls = ({ quiz }) => {
+    const removeHandler = async () => {
+        const body = { quiz: quiz }
+        const res = await fetch('/api/quizzes', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        mutate('/api/quizzes')
+    }
     return (
         <Button.Group>
             <EditButton />
-            <RemoveButton />
+            <RemoveButton handler={removeHandler} />
         </Button.Group>
     )
 }
@@ -22,10 +36,10 @@ const ListItem = ({ quiz }) => {
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>
             <Table.Cell width={4}>
-                {quiz.tags.toString()}
+                {quiz.tags.join(',')}
             </Table.Cell>
             <Table.Cell width={2} textAlign='center'>
-                <ItemControls />
+                <ItemControls quiz={quiz} />
             </Table.Cell>
         </Table.Row>
     )

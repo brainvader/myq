@@ -58,7 +58,38 @@ const addQuiz = async (req, res) => {
     res.json({ uid: result.data.uids.newQuiz })
 }
 
+const deleteQuiz = async (req, res) => {
+    const quiz = req.body.quiz
+    const uid = quiz.uid
+    console.info(`delete quiz ${uid}`)
+
+    const [question] = quiz.question === undefined ? [null] : quiz.question
+    const [answer] = quiz.answer === undefined ? [null] : quiz.answer
+
+    const questionField = question ? { question: { uid: question.uid } } : {}
+    const answerField = answer ? { answer: { uid: answer.uid } } : {}
+
+    const client = req.dbClient
+    const txn = client.newTxn()
+    const deleteJson = {
+        uid: uid,
+        title: null,
+        ...questionField,
+        ...answerField
+    }
+
+    const result = await txn.mutate({
+        deleteJson: deleteJson,
+        commitNow: true,
+    })
+
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.json({ uid: '201' })
+}
+
 handler.get(getQuizzes)
 handler.post(addQuiz)
+handler.delete(deleteQuiz)
 
 export default handler;

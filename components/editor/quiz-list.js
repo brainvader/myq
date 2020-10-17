@@ -1,7 +1,10 @@
+import { useMachine } from '@xstate/react'
 import { mutate } from 'swr'
 
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
+
+import { PaginationMachine, changePage } from '../../machines/pagenationMachine'
 
 const EditButton = () => <Button icon='edit' />
 const RemoveButton = ({ handler }) => {
@@ -45,14 +48,34 @@ const ListItem = ({ quiz }) => {
     )
 }
 
+const getVisibleRange = (activePage) => {
+    const start = (activePage - 1) * 10
+    const end = start + 10
+    return [start, end]
+}
+
 const List = ({ quizzes }) => {
 
-    const listitems = quizzes.map((quiz, index) => {
-        console.log(`index ${index}`)
+    const totalQuiz = quizzes.length
+    const quizPerPage = 10
+
+    const totalPages = Math.ceil(totalQuiz / quizPerPage)
+
+    const [state, send] = useMachine(PaginationMachine.withContext({
+        ...PaginationMachine.context,
+        totalPages: totalPages
+    }))
+
+    const [start, end] = getVisibleRange(state.context.activePage)
+    const visibleQuizzes = quizzes.slice(start, end)
+    const visibleItems = visibleQuizzes.map((quiz, index) => {
         return <ListItem key={index.toString()} quiz={quiz} />
     })
 
-    const totalPages = () => Math.floor(quizzes.length / 10) + 1
+    const handlePageChange = (event, { activePage }) => {
+        const changePageEvent = changePage(activePage)
+        send(changePageEvent)
+    }
 
     return (
         <Table celled verticalAlign='middle'>
@@ -67,13 +90,16 @@ const List = ({ quizzes }) => {
             </Table.Header>
 
             <Table.Body>
-                {listitems}
+                {visibleItems}
             </Table.Body>
 
             <Table.Footer>
                 <Table.Row textAlign='right'>
                     <Table.HeaderCell colSpan='5'>
-                        <Pagination defaultActivePage={1} totalPages={totalPages()} />
+                        <Pagination
+                            activePage={state.context.activePage}
+                            totalPages={state.context.totalPages}
+                            onPageChange={handlePageChange} />
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Footer>

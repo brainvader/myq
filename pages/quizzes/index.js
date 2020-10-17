@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import QuizList from '../../components/editor/quiz-list'
+import { PageProvider, usePage } from '../../components/editor/paginator'
 
 import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search, Icon } from 'semantic-ui-react'
@@ -21,7 +22,9 @@ const ReloadQuizzesButton = ({ handler }) => {
     return <Button icon='sync' onClick={handler} />
 }
 
-export default function Dashboard() {
+function Content() {
+
+    const { pageState, _ } = usePage()
 
     const createHandler = async () => {
         const body = { createdAt: getTimeStamp() }
@@ -31,8 +34,7 @@ export default function Dashboard() {
             body: JSON.stringify(body)
         })
         const data = await res.json()
-        console.log(`create quiz with uid: ${data.uid}`)
-        mutate('/api/quizzes', true)
+        mutate(`/api/quizzes?page=${pageState.activePage}`)
 
         // router.push('/editor')
     }
@@ -69,3 +71,13 @@ export default function Dashboard() {
         </div >
     )
 }
+
+const Dashboad = () => {
+    return (
+        <PageProvider>
+            <Content />
+        </PageProvider>
+    )
+}
+
+export default Dashboad

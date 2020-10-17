@@ -1,11 +1,10 @@
-import { useMachine } from '@xstate/react'
 import { mutate } from 'swr'
-import { useState } from 'react'
 
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
 
 import { useQuizzes } from '../../lib/hooks'
+import { usePage } from '../../components/editor/paginator'
 
 const EditButton = () => <Button icon='edit' />
 const RemoveButton = ({ handler }) => {
@@ -13,6 +12,7 @@ const RemoveButton = ({ handler }) => {
 }
 
 const ItemControls = ({ quiz }) => {
+    const { pageState, pageActions } = usePage()
     const removeHandler = async () => {
         const body = { quiz: quiz }
         const res = await fetch('/api/quizzes', {
@@ -21,7 +21,7 @@ const ItemControls = ({ quiz }) => {
             body: JSON.stringify(body)
         })
 
-        mutate('/api/quizzes')
+        mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
     return (
         <Button.Group>
@@ -56,15 +56,16 @@ const Page = ({ quizzes }) => {
 }
 
 const List = () => {
-    const [pageIndex, setPageIndex] = useState(1);
 
-    const { data, mutate, isLoading, isError } = useQuizzes(pageIndex)
+    const { pageState, pageActions } = usePage()
+
+    const { data, mutate, isLoading, isError } = useQuizzes(pageState.activePage)
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
     const handlePageChange = (event, { activePage }) => {
-        setPageIndex(activePage)
+        pageActions.changePage(activePage)
     }
 
     return (
@@ -87,7 +88,7 @@ const List = () => {
                 <Table.Row textAlign='right'>
                     <Table.HeaderCell colSpan='5'>
                         <Pagination
-                            activePage={pageIndex}
+                            activePage={pageState.activePage}
                             totalPages={data.totalPages}
                             onPageChange={handlePageChange} />
                     </Table.HeaderCell>

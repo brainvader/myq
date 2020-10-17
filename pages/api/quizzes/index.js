@@ -57,19 +57,23 @@ const addQuiz = async (req, res) => {
     const txn = client.newTxn()
 
     const quiz = {
-        uid: '_:newQuiz',
-        title: '新規クイズ',
-        user: 'brainvader',
-        date: createdAt,
-        question: [{
-            type: 'text',
-            content: '我思う'
-        }],
-        answer: [{
-            type: 'text',
-            content: '故に我あり'
-        }],
-        tags: ['']
+        "uid": '_:newquiz',
+        "title": '新規クイズ',
+        "user": 'brainvader',
+        "date": createdAt,
+        "question": [
+            {
+                "type": 'text',
+                "content": '我思う'
+            }
+        ],
+        "answer": [
+            {
+                "type": 'text',
+                "content": '故に我あり'
+            }
+        ],
+        "tags": ['']
     }
 
     const result = await txn.mutate({ setJson: quiz, commitNow: true })

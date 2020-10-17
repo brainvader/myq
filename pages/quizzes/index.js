@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router'
 
+import { mutate } from 'swr'
+
 import QuizList from '../../components/editor/quiz-list'
 
 import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search, Icon } from 'semantic-ui-react'
 
-import { useQuizzes } from '../../lib/hooks'
 import { getTimeStamp } from '../../lib/utils'
 
 const CreateQuizButton = ({ handler }) => {
@@ -21,11 +22,6 @@ const ReloadQuizzesButton = ({ handler }) => {
 }
 
 export default function Dashboard() {
-    const router = useRouter()
-    const { quizzes, mutate, isLoading, isError } = useQuizzes()
-
-    if (isError) return <div>failed to load</div>
-    if (isLoading) return <div>loading...</div>
 
     const createHandler = async () => {
         const body = { createdAt: getTimeStamp() }
@@ -36,7 +32,8 @@ export default function Dashboard() {
         })
         const data = await res.json()
         console.log(`create quiz with uid: ${data.uid}`)
-        mutate()
+        mutate('/api/quizzes', true)
+
         // router.push('/editor')
     }
 
@@ -65,7 +62,7 @@ export default function Dashboard() {
                 </Grid.Row>
 
                 <Grid.Row>
-                    <QuizList quizzes={quizzes} />
+                    <QuizList />
                 </Grid.Row>
 
             </Grid>

@@ -1,10 +1,11 @@
 import { useMachine } from '@xstate/react'
 import { mutate } from 'swr'
+import { useState } from 'react'
 
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
 
-import { PaginationMachine, changePage } from '../../machines/pagenationMachine'
+import { useQuizzes } from '../../lib/hooks'
 
 const EditButton = () => <Button icon='edit' />
 const RemoveButton = ({ handler }) => {
@@ -48,33 +49,22 @@ const ListItem = ({ quiz }) => {
     )
 }
 
-const getVisibleRange = (activePage) => {
-    const start = (activePage - 1) * 10
-    const end = start + 10
-    return [start, end]
-}
-
-const List = ({ quizzes }) => {
-
-    const totalQuiz = quizzes.length
-    const quizPerPage = 10
-
-    const totalPages = Math.ceil(totalQuiz / quizPerPage)
-
-    const [state, send] = useMachine(PaginationMachine.withContext({
-        ...PaginationMachine.context,
-        totalPages: totalPages
-    }))
-
-    const [start, end] = getVisibleRange(state.context.activePage)
-    const visibleQuizzes = quizzes.slice(start, end)
-    const visibleItems = visibleQuizzes.map((quiz, index) => {
+const Page = ({ quizzes }) => {
+    return quizzes.map((quiz, index) => {
         return <ListItem key={index.toString()} quiz={quiz} />
     })
+}
+
+const List = () => {
+    const [pageIndex, setPageIndex] = useState(1);
+
+    const { data, mutate, isLoading, isError } = useQuizzes(pageIndex)
+
+    if (isError) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
 
     const handlePageChange = (event, { activePage }) => {
-        const changePageEvent = changePage(activePage)
-        send(changePageEvent)
+        setPageIndex(activePage)
     }
 
     return (
@@ -90,15 +80,15 @@ const List = ({ quizzes }) => {
             </Table.Header>
 
             <Table.Body>
-                {visibleItems}
+                <Page quizzes={data.quizzes} />
             </Table.Body>
 
             <Table.Footer>
                 <Table.Row textAlign='right'>
                     <Table.HeaderCell colSpan='5'>
                         <Pagination
-                            activePage={state.context.activePage}
-                            totalPages={state.context.totalPages}
+                            activePage={pageIndex}
+                            totalPages={data.totalPages}
                             onPageChange={handlePageChange} />
                     </Table.HeaderCell>
                 </Table.Row>

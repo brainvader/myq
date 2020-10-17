@@ -21,12 +21,34 @@ const quizzesQuery = `
     }
 }`
 
+const QUIZ_PER_PAGE = 10
+
+const getVisibleRange = (index) => {
+    const start = (index - 1) * QUIZ_PER_PAGE
+    const end = start + QUIZ_PER_PAGE
+    return [start, end]
+}
+
 const getQuizzes = async (req, res) => {
+    const { page } = req.query
     const result = await req.dbClient.newTxn().query(quizzesQuery)
-    const quizzes = result.data.quizzes
+    const allQuizzes = result.data.quizzes
+    const totalQuizzes = allQuizzes.length
+
+    const totalPages = Math.ceil(totalQuizzes / QUIZ_PER_PAGE)
+
+    const [start, end] = getVisibleRange(page)
+    const quizzes = allQuizzes.slice(start, end)
+
+    const body = {
+        totalQuizzes: totalQuizzes,
+        totalPages: totalPages,
+        quizzes: quizzes
+    }
+
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify(quizzes))
+    res.json(body)
 }
 
 const addQuiz = async (req, res) => {

@@ -6,7 +6,7 @@ import QuizList from '../../components/editor/quiz-list'
 import { PageProvider, usePage } from '../../components/editor/paginator'
 
 import { Grid, Header } from 'semantic-ui-react'
-import { Button, Search, Icon } from 'semantic-ui-react'
+import { Button, Search } from 'semantic-ui-react'
 
 import { getTimeStamp } from '../../lib/utils'
 

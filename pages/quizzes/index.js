@@ -20,7 +20,7 @@ const ReloadQuizzesButton = ({ handler }) => {
     return <Button icon='sync' onClick={handler} />
 }
 
-export default function Home() {
+export default function Dashboard() {
     const router = useRouter()
     const { quizzes, mutate, isLoading, isError } = useQuizzes()
 

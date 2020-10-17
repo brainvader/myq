@@ -8,7 +8,7 @@ import { Machine, assign } from "xstate"
 // -> setActivePage (action)
 
 // state name
-const PAGE_AT = 'PAGE_AT'
+const DISPLAYING = 'displaying'
 
 // event descriptor
 const CHANGE_PAGE = 'CHANGE_PAGE'
@@ -26,17 +26,17 @@ const transitionTo = (state) => state
 
 const config = {
     id: 'pagination',
-    initial: PAGE_AT,
+    initial: DISPLAYING,
     context: {
         activePage: 1,
         totalPages: undefined
     },
     states: {
-        [PAGE_AT]: {
+        [DISPLAYING]: {
             on: {
                 [CHANGE_PAGE]: {
                     actions: SET_PAGE,
-                    target: transitionTo(PAGE_AT) // => self-transition
+                    target: transitionTo(DISPLAYING) // => self-transition
                 }
             }
         }

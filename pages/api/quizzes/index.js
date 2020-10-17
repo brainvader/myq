@@ -35,8 +35,9 @@ const addQuiz = async (req, res) => {
     const txn = client.newTxn()
 
     const quiz = {
-        uid: "_:newQuiz",
+        uid: '_:newQuiz',
         title: '新規クイズ',
+        user: 'brainvader',
         date: createdAt,
         question: [{
             type: 'text',

@@ -9,7 +9,7 @@ const label = {
     content: 'Add Tag'
 }
 
-export default function TagInput() {
+export default function TagInput({ tags }) {
     return (
         <Input
             style={style}
@@ -18,6 +18,7 @@ export default function TagInput() {
             label={label}
             labelPosition='right'
             placeholder='Enter tags'
+            value={tags.join(',')}
         />
     )
 }

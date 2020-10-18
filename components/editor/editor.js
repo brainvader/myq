@@ -40,7 +40,7 @@ export default function Editor({ uid }) {
                             <TitleInput title={quiz.title} />
                         </Grid.Row>
                         <Grid.Row>
-                            <TagInput />
+                            <TagInput tags={quiz.tags} />
                         </Grid.Row>
                     </Grid.Column>
                 </Grid.Row>

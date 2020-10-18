@@ -50,12 +50,11 @@ const ItemControls = ({ quiz }) => {
 }
 
 const ListItem = ({ quiz }) => {
-    const [checked, setState] = useState(false)
-
     const { pageState, pageActions } = usePage()
 
+    const checked = pageState.checked.has(quiz.uid)
+
     const toggle = () => {
-        setState(!checked)
         if (checked) pageActions.uncheck(quiz.uid)
         if (!checked) pageActions.check(quiz.uid)
     }
@@ -65,7 +64,7 @@ const ListItem = ({ quiz }) => {
             <Table.Cell width={1} textAlign='center'>
                 <Checkbox
                     onChange={toggle}
-                    checked={checked} />
+                    checked={pageState.checked.has(quiz.uid)} />
             </Table.Cell>
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>
@@ -81,7 +80,10 @@ const ListItem = ({ quiz }) => {
 
 const Page = ({ quizzes }) => {
     return quizzes.map((quiz, index) => {
-        return <ListItem key={index.toString()} quiz={quiz} />
+        return (<ListItem
+            key={index.toString()}
+            quiz={quiz} />
+        )
     })
 }
 

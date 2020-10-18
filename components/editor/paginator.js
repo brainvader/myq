@@ -6,10 +6,11 @@ const PageContext = createContext();
 const CHANGE_PAGE = 'CHANGE_PAGE'
 const CHECK = 'CHECK'
 const UNCHECK = 'UNCHECK'
+const UNCHECK_ALL = 'UNCHECK_ALL'
 
 const initialState = {
     activePage: 1,
-    checked: []
+    checked: new Set()
 }
 
 const reducer = (state, action) => {
@@ -21,18 +22,23 @@ const reducer = (state, action) => {
             }
         case CHECK: {
             const uid = action.payload
+            state.checked.add(uid)
             return {
                 ...state,
-                checked: [...state.checked, uid]
             }
         }
         case UNCHECK: {
             const uid = action.payload
-            const index = state.checked.indexOf(uid);
-            state.checked.splice(index, 1);
+            const result = state.checked.delete(uid)
+            console.log(`delete ${uid} is ${result}`)
+            return {
+                ...state
+            }
+        }
+        case UNCHECK_ALL: {
             return {
                 ...state,
-                checked: state.checked
+                checked: new Set()
             }
         }
         default:
@@ -52,9 +58,10 @@ const PageProvider = (props) => {
             dispatch({ type: CHECK, payload: uid })
         },
         uncheck: (uid) => {
-            console.log(`uncheck ${uid}`)
-
             dispatch({ type: UNCHECK, payload: uid })
+        },
+        uncheckAll: () => {
+            dispatch({ type: UNCHECK_ALL })
         }
     };
 

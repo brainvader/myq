@@ -85,38 +85,62 @@ const addQuiz = async (req, res) => {
     res.json({ uid: result.data.uids.newQuiz })
 }
 
-const deleteQuiz = async (req, res) => {
-    const quiz = req.body.quiz
-    const uid = quiz.uid
-    console.info(`delete quiz ${uid}`)
+const getQuizzQuery = (uid) => {
+    return `
+    {
+        quiz(func: uid(${uid})) {
+            uid
+            question {
+                uid
+            }
+            answer {
+                uid
+            }
+        }
+    }`
+}
 
-    const [question] = quiz.question === undefined ? [null] : quiz.question
-    const [answer] = quiz.answer === undefined ? [null] : quiz.answer
+const deleteQuizzes = async (req, res) => {
+    const uids = req.body.uids
 
-    const questionField = question ? { question: { uid: question.uid } } : {}
-    const answerField = answer ? { answer: { uid: answer.uid } } : {}
+    const quizzes = await Promise.all(uids.map(async (uid) => {
+        const result = await req.dbClient.newTxn().query(getQuizzQuery(uid))
+        const [quiz] = result.data.quiz
+        return quiz
+    }))
 
-    const client = req.dbClient
-    const txn = client.newTxn()
-    const deleteJson = {
-        uid: uid,
-        title: null,
-        ...questionField,
-        ...answerField
-    }
+    const deleted = await Promise.all(quizzes.map(async (quiz) => {
+        const uid = quiz.uid
 
-    const result = await txn.mutate({
-        deleteJson: deleteJson,
-        commitNow: true,
-    })
+        const [question] = quiz.question === undefined ? [null] : quiz.question
+        const [answer] = quiz.answer === undefined ? [null] : quiz.answer
+
+        const questionField = question ? { question: { uid: question.uid } } : {}
+        const answerField = answer ? { answer: { uid: answer.uid } } : {}
+
+        const client = req.dbClient
+        const txn = client.newTxn()
+        const deleteJson = {
+            uid: uid,
+            title: null,
+            ...questionField,
+            ...answerField
+        }
+
+        const result = await txn.mutate({
+            deleteJson: deleteJson,
+            commitNow: true,
+        })
+        return quiz.uid
+    }))
 
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
-    res.json({ uid: '201' })
+    res.json({ deleted: deleted })
 }
 
 handler.get(getQuizzes)
 handler.post(addQuiz)
-handler.delete(deleteQuiz)
+handler.delete(deleteQuizzes)
 
 export default handler;

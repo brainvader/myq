@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import { Checkbox, Table } from 'semantic-ui-react'
@@ -6,15 +8,27 @@ import { Button, Pagination } from 'semantic-ui-react'
 import { useQuizzes } from '../../lib/hooks'
 import { usePage } from '../../components/editor/paginator'
 
-const EditButton = () => <Button icon='edit' />
-const RemoveButton = ({ handler }) => {
-    return <Button icon='trash alternate outline' onClick={handler} />
+const EditButton = ({ quiz }) => {
+    const router = useRouter()
+
+    const editHandler = () => {
+        router.push({
+            pathname: '/quizzes/[uid]',
+            query: { uid: quiz.uid },
+        })
+    }
+
+    return <Button icon='edit' onClick={editHandler} />
 }
 
-const ItemControls = ({ quiz }) => {
-    const { pageState, pageActions } = usePage()
+const RemoveButton = ({ quiz }) => {
+    const { pageState, _ } = usePage()
+
+    // TODO: Get all quizzes
+
     const removeHandler = async () => {
-        const body = { quiz: quiz }
+        const uids = [quiz.uid]
+        const body = { uids: uids }
         const res = await fetch('/api/quizzes', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -23,19 +37,34 @@ const ItemControls = ({ quiz }) => {
 
         mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
+    return <Button icon='trash' onClick={removeHandler} />
+}
+
+const ItemControls = ({ quiz }) => {
     return (
         <Button.Group>
-            <EditButton />
-            <RemoveButton handler={removeHandler} />
+            <EditButton quiz={quiz} />
+            <RemoveButton quiz={quiz} />
         </Button.Group>
     )
 }
 
 const ListItem = ({ quiz }) => {
+    const { pageState, pageActions } = usePage()
+
+    const checked = pageState.checked.has(quiz.uid)
+
+    const toggle = () => {
+        if (checked) pageActions.uncheck(quiz.uid)
+        if (!checked) pageActions.check(quiz.uid)
+    }
+
     return (
         <Table.Row>
             <Table.Cell width={1} textAlign='center'>
-                <Checkbox />
+                <Checkbox
+                    onChange={toggle}
+                    checked={pageState.checked.has(quiz.uid)} />
             </Table.Cell>
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>
@@ -51,7 +80,10 @@ const ListItem = ({ quiz }) => {
 
 const Page = ({ quizzes }) => {
     return quizzes.map((quiz, index) => {
-        return <ListItem key={index.toString()} quiz={quiz} />
+        return (<ListItem
+            key={index.toString()}
+            quiz={quiz} />
+        )
     })
 }
 

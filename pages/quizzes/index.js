@@ -10,20 +10,7 @@ import { Button, Search } from 'semantic-ui-react'
 
 import { getTimeStamp } from '../../lib/utils'
 
-const CreateQuizButton = ({ handler }) => {
-    return <Button icon='plus' onClick={handler} />
-}
-
-const DeleteQuizButton = () => {
-    return <Button icon='delete' />
-}
-
-const ReloadQuizzesButton = ({ handler }) => {
-    return <Button icon='sync' onClick={handler} />
-}
-
-function Content() {
-
+const CreateQuizButton = () => {
     const router = useRouter()
     const { pageState, _ } = usePage()
 
@@ -42,6 +29,33 @@ function Content() {
             query: { uid: newQuiz.uid },
         })
     }
+    return <Button icon='plus' onClick={createHandler} />
+}
+
+const DeleteQuizButton = () => {
+    const { pageState, pageActions } = usePage()
+
+    const deleteCheckedHandler = async () => {
+        const uids = Array.from(pageState.checked)
+        const body = { uids: uids }
+        const res = await fetch('/api/quizzes', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        pageActions.uncheckAll()
+        mutate(`/api/quizzes?page=${pageState.activePage}`)
+    }
+
+    return <Button icon='trash' onClick={deleteCheckedHandler} />
+}
+
+const ReloadQuizzesButton = ({ handler }) => {
+    return <Button icon='sync' onClick={handler} />
+}
+
+function Content() {
 
     const reloadHandler = () => mutate()
 
@@ -55,7 +69,7 @@ function Content() {
 
                     <Grid.Column textAlign='left'>
                         <Button.Group>
-                            <CreateQuizButton handler={createHandler} />
+                            <CreateQuizButton />
                             <DeleteQuizButton />
                             <ReloadQuizzesButton handler={reloadHandler} />
                         </Button.Group>

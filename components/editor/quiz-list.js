@@ -14,8 +14,10 @@ const RemoveButton = ({ handler }) => {
 
 const ItemControls = ({ quiz }) => {
     const { pageState, pageActions } = usePage()
+
     const removeHandler = async () => {
-        const body = { quiz: quiz }
+        const quizzes = [quiz]
+        const body = { quizzes: quizzes }
         const res = await fetch('/api/quizzes', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },

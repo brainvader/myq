@@ -24,6 +24,7 @@ const ReloadQuizzesButton = ({ handler }) => {
 
 function Content() {
 
+    const router = useRouter()
     const { pageState, _ } = usePage()
 
     const createHandler = async () => {
@@ -33,10 +34,13 @@ function Content() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         })
-        const data = await res.json()
+        const newQuiz = await res.json()
         mutate(`/api/quizzes?page=${pageState.activePage}`)
 
-        // router.push('/editor')
+        router.push({
+            pathname: '/quizzes/[uid]',
+            query: { uid: newQuiz.uid },
+        })
     }
 
     const reloadHandler = () => mutate()

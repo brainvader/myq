@@ -4,11 +4,12 @@ const style = {
     width: '100%'
 }
 
-export default function TitleInput() {
+export default function TitleInput({ title }) {
     return (
         <Input
             style={style}
             icon="question"
-            placeholder='Title' />
+            placeholder='Title'
+            value={title} />
     )
 }

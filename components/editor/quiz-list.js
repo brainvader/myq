@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { mutate } from 'swr'
 
 import { Checkbox, Table } from 'semantic-ui-react'
@@ -32,10 +33,22 @@ const ItemControls = ({ quiz }) => {
 }
 
 const ListItem = ({ quiz }) => {
+    const [checked, setState] = useState(false)
+
+    const { pageState, pageActions } = usePage()
+
+    const toggle = () => {
+        setState(!checked)
+        if (checked) pageActions.uncheck(quiz.uid)
+        if (!checked) pageActions.check(quiz.uid)
+    }
+
     return (
         <Table.Row>
             <Table.Cell width={1} textAlign='center'>
-                <Checkbox />
+                <Checkbox
+                    onChange={toggle}
+                    checked={checked} />
             </Table.Cell>
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import { Checkbox, Table } from 'semantic-ui-react'
@@ -7,13 +8,21 @@ import { Button, Pagination } from 'semantic-ui-react'
 import { useQuizzes } from '../../lib/hooks'
 import { usePage } from '../../components/editor/paginator'
 
-const EditButton = () => <Button icon='edit' />
-const RemoveButton = ({ handler }) => {
-    return <Button icon='trash alternate outline' onClick={handler} />
+const EditButton = ({ quiz }) => {
+    const router = useRouter()
+
+    const editHandler = () => {
+        router.push({
+            pathname: '/quizzes/[uid]',
+            query: { uid: quiz.uid },
+        })
+    }
+
+    return <Button icon='edit' onClick={editHandler} />
 }
 
-const ItemControls = ({ quiz }) => {
-    const { pageState, pageActions } = usePage()
+const RemoveButton = ({ quiz }) => {
+    const { pageState, _ } = usePage()
 
     const removeHandler = async () => {
         const quizzes = [quiz]
@@ -26,10 +35,14 @@ const ItemControls = ({ quiz }) => {
 
         mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
+    return <Button icon='trash' onClick={removeHandler} />
+}
+
+const ItemControls = ({ quiz }) => {
     return (
         <Button.Group>
-            <EditButton />
-            <RemoveButton handler={removeHandler} />
+            <EditButton quiz={quiz} />
+            <RemoveButton quiz={quiz} />
         </Button.Group>
     )
 }

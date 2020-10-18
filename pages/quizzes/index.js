@@ -33,7 +33,22 @@ const CreateQuizButton = () => {
 }
 
 const DeleteQuizButton = () => {
-    return <Button icon='delete' />
+    const { pageState, pageActions } = usePage()
+
+    const deleteCheckedHandler = async () => {
+        const uids = Array.from(pageState.checked)
+        const body = { uids: uids }
+        const res = await fetch('/api/quizzes', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        pageActions.uncheckAll()
+        mutate(`/api/quizzes?page=${pageState.activePage}`)
+    }
+
+    return <Button icon='trash' onClick={deleteCheckedHandler} />
 }
 
 const ReloadQuizzesButton = ({ handler }) => {

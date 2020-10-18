@@ -24,9 +24,11 @@ const EditButton = ({ quiz }) => {
 const RemoveButton = ({ quiz }) => {
     const { pageState, _ } = usePage()
 
+    // TODO: Get all quizzes
+
     const removeHandler = async () => {
-        const quizzes = [quiz]
-        const body = { quizzes: quizzes }
+        const uids = [quiz.uid]
+        const body = { uids: uids }
         const res = await fetch('/api/quizzes', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },

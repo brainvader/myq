@@ -85,8 +85,29 @@ const addQuiz = async (req, res) => {
     res.json({ uid: result.data.uids.newQuiz })
 }
 
+const getQuizzQuery = (uid) => {
+    return `
+    {
+        quiz(func: uid(${uid})) {
+            uid
+            question {
+                uid
+            }
+            answer {
+                uid
+            }
+        }
+    }`
+}
+
 const deleteQuizzes = async (req, res) => {
-    const quizzes = req.body.quizzes
+    const uids = req.body.uids
+
+    const quizzes = await Promise.all(uids.map(async (uid) => {
+        const result = await req.dbClient.newTxn().query(getQuizzQuery(uid))
+        const [quiz] = result.data.quiz
+        return quiz
+    }))
 
     const deleted = await Promise.all(quizzes.map(async (quiz) => {
         const uid = quiz.uid

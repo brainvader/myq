@@ -36,7 +36,7 @@ export default function Editor({ uid }) {
         <Container>
             <Grid centered>
                 <Grid.Row>
-                    <EditorMenu />
+                    <EditorMenu quiz={quiz} />
                 </Grid.Row>
 
                 <Grid.Row>

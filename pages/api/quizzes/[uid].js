@@ -31,6 +31,17 @@ const getQuiz = async (req, res) => {
     res.json(quiz)
 }
 
+const saveQuiz = async (req, res) => {
+    const quiz = req.body.quiz
+    const client = req.dbClient
+    const txn = client.newTxn()
+    const result = await txn.mutate({ setJson: quiz, commitNow: true })
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
+    res.json(quiz)
+}
+
 handler.get(getQuiz)
+handler.put(saveQuiz)
 
 export default handler;

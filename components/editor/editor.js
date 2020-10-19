@@ -25,7 +25,7 @@ export default function Editor({ uid }) {
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 
-    const [quiz] = data.quiz
+    const quiz = data
 
     return (
         <Container>

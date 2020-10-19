@@ -27,8 +27,8 @@ const getQuizzQuery = (uid) => {
 const getQuiz = async (req, res) => {
     const { uid } = req.query
     const result = await req.dbClient.newTxn().query(getQuizzQuery(uid))
-    const quiz = result.data.quiz
-    res.json({ quiz: quiz })
+    const [quiz] = result.data.quiz
+    res.json(quiz)
 }
 
 handler.get(getQuiz)

@@ -9,16 +9,21 @@ import TagInput from '../tag-input'
 import CellForm from '../cell-form'
 
 import { useQuiz } from '../../lib/hooks'
+import { requestUpdateQuiz } from '../../logics/api'
 
 export default function Editor({ uid }) {
+    const { data, mutate, isLoading, isError } = useQuiz(uid)
 
-    const router = useRouter()
+    const autoSave = async () => {
+        console.log(data.title)
+        const newQuiz = await requestUpdateQuiz(data)
+        mutate({ ...newQuiz })
+    }
 
     useEffect(() => {
-        if (!uid) {
-            router.push('/quizzes')
-        }
-    }, [uid])
+        const interval = data ? setInterval(autoSave, 1000) : null
+        return () => clearInterval(interval)
+    }, [data])
 
     const { data, mutate, isLoading, isError } = useQuiz(uid)
 

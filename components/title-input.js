@@ -24,7 +24,7 @@ export default function TitleInput({ quiz }) {
             style={style}
             icon="question"
             placeholder='Title'
-            defaultValue={quiz.title}
+            value={quiz.title}
             onChange={inputHandler} />
     )
 }

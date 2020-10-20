@@ -1,5 +1,5 @@
 import nextConnect from 'next-connect';
-import middleware from '../../../middleware/database';
+import middleware from '../../../../middleware/database';
 
 const handler = nextConnect();
 
@@ -19,7 +19,10 @@ const getQuizzQuery = (uid) => {
             answer {
                 uid
             }
-            tags
+            tags {
+                uid
+                tag_name
+            }
         }
     }`
 }
@@ -34,8 +37,15 @@ const getQuiz = async (req, res) => {
 const saveQuiz = async (req, res) => {
     const quiz = req.body.quiz
     const client = req.dbClient
+    const original = await client.newTxn().query(getQuizzQuery(quiz.uid))
+    console.log('original', original.data.quiz[0].tags.join(','))
+
     const txn = client.newTxn()
     const result = await txn.mutate({ setJson: quiz, commitNow: true })
+
+    const post = await client.newTxn().query(getQuizzQuery(quiz.uid))
+    console.log('new', post.data.quiz[0].tags.join(','))
+
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.json(quiz)

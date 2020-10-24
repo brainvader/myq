@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 import { Grid, Container } from 'semantic-ui-react'
 
@@ -15,17 +14,19 @@ export default function Editor({ uid }) {
     const { data, mutate, isLoading, isError } = useQuiz(uid)
 
     const autoSave = async () => {
-        console.log(data.title)
         const newQuiz = await requestUpdateQuiz(data)
-        mutate({ ...newQuiz })
+        mutate(newQuiz)
     }
 
     useEffect(() => {
-        const interval = data ? setInterval(autoSave, 1000) : null
-        return () => clearInterval(interval)
+        // const interval = data ? setInterval(async () => {
+        //     console.log(`pre auto save`, data.tags)
+        //     const newQuiz = await requestUpdateQuiz(data)
+        //     console.log(`post auto save`, newQuiz.tags)
+        //     mutate(newQuiz)
+        // }, 1000) : null
+        // return () => clearInterval(interval)
     }, [data])
-
-    const { data, mutate, isLoading, isError } = useQuiz(uid)
 
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
@@ -45,7 +46,7 @@ export default function Editor({ uid }) {
                             <TitleInput quiz={quiz} />
                         </Grid.Row>
                         <Grid.Row>
-                            <TagInput tags={quiz.tags} />
+                            <TagInput quiz={quiz} />
                         </Grid.Row>
                     </Grid.Column>
                 </Grid.Row>
@@ -54,8 +55,12 @@ export default function Editor({ uid }) {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <CellForm name='Question' />
-                        <CellForm name='Answer' />
+                        <CellForm
+                            name='Question'
+                            quiz={quiz} />
+                        <CellForm
+                            name='Answer'
+                            quiz={quiz} />
 
                     </Grid.Column>
                 </Grid.Row>

@@ -17,7 +17,10 @@ const quizzesQuery = `
         answer {
             uid
         }
-        tags
+        tags {
+            uid
+            tag_name
+        }
     }
 }`
 
@@ -73,8 +76,15 @@ const addQuiz = async (req, res) => {
                 "content": "故に我あり"
             }
         ],
-        "tags": [""]
+        "tags": [
+            {
+                "uid": "_:tagName",
+                "tag_name": ""
+            }
+        ]
     }
+
+    console.log('tags',)
 
     const result = await txn.mutate({ setJson: quiz, commitNow: true })
 
@@ -96,6 +106,9 @@ const getQuizzQuery = (uid) => {
             answer {
                 uid
             }
+            tags {
+                uid
+            }
         }
     }`
 }
@@ -112,11 +125,14 @@ const deleteQuizzes = async (req, res) => {
     const deleted = await Promise.all(quizzes.map(async (quiz) => {
         const uid = quiz.uid
 
+        // TODO: Data
         const [question] = quiz.question === undefined ? [null] : quiz.question
         const [answer] = quiz.answer === undefined ? [null] : quiz.answer
+        const [tags] = quiz.tags === undefined ? [null] : quiz.tags
 
         const questionField = question ? { question: { uid: question.uid } } : {}
         const answerField = answer ? { answer: { uid: answer.uid } } : {}
+        const tagsField = tags ? { tags: { uid: tags.uid } } : {}
 
         const client = req.dbClient
         const txn = client.newTxn()

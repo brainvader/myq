@@ -9,7 +9,7 @@ const cellStyle = {
     paddingTop: '2em'
 }
 
-export default function CellForm({ name }) {
+export default function CellForm({ name, quiz }) {
     return (
         <Segment.Group>
 

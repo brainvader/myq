@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { mutate } from 'swr'
+
 import { Input } from 'semantic-ui-react'
 
 const style = {
@@ -9,7 +12,22 @@ const label = {
     content: 'Add Tag'
 }
 
-export default function TagInput() {
+const updateTags = (uid, tags) => {
+    mutate(`/api/quizzes/${uid}`, async current => {
+        console.log('curret', tags)
+        const newQuiz = { ...current, tags: [...tags] }
+        console.log(`update tags`, newQuiz.tags)
+        return newQuiz
+    }, false)
+}
+
+export default function TagInput({ quiz }) {
+
+    const inputHandler = (event, data) => {
+        const newTags = data.value.split(',').filter(() => true)
+        // updateTags(quiz.uid, newTags)
+    }
+
     return (
         <Input
             style={style}
@@ -18,6 +36,8 @@ export default function TagInput() {
             label={label}
             labelPosition='right'
             placeholder='Enter tags'
+            value={[].join(',')}
+            onChange={inputHandler}
         />
     )
 }

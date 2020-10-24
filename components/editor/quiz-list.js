@@ -69,7 +69,7 @@ const ListItem = ({ quiz }) => {
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>
             <Table.Cell width={4}>
-                {quiz.tags.join(',')}
+                {quiz.tags.map((tag) => tag.tag_name).join(',')}
             </Table.Cell>
             <Table.Cell width={2} textAlign='center'>
                 <ItemControls quiz={quiz} />

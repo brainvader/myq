@@ -90,6 +90,7 @@ export default function TagInput({ quiz }) {
                 console.log(`Add new tag`, newTag)
                 const tagged = await addTag(quiz.uid, newTag)
                 setSearchTerm('')
+                mutate(`/api/quizzes/${quiz.uid}`)
             }
         }
     }

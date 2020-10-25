@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 
 import { Search, Label, List } from 'semantic-ui-react'
 
@@ -41,6 +41,17 @@ const addTag = async (uid, tag) => {
     return newTag
 }
 
+const detachTag = async (uid, tag) => {
+    const body = { tag: tag }
+    const res = await fetch(`/api/quizzes/${uid}/tags`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+    console.log(res)
+    return res
+}
+
 export default function TagInput({ quiz }) {
 
     const [searchTerm, setSearchTerm] = useState("")
@@ -59,9 +70,13 @@ export default function TagInput({ quiz }) {
         setSearchTerm('')
     }
 
-    const removeHandler = (event, data) => {
+    const detachHandler = async (event, data) => {
         console.log(`remove ${data.content} tag`)
-        // TODO: DELETE /api/quizzes/{uid}/tags with tag uid
+        const tag_name = data.content
+        const tagIndex = quiz.tags.findIndex(tag => tag.tag_name === tag_name)
+        const tag = quiz.tags[tagIndex]
+        const res = await detachTag(quiz.uid, tag)
+        mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const keyboardHandler = async (event) => {
@@ -85,7 +100,7 @@ export default function TagInput({ quiz }) {
                 <Label
                     content={tag.tag_name}
                     removeIcon='delete'
-                    onRemove={removeHandler} />
+                    onRemove={detachHandler} />
             </List.Item>
         )
     })

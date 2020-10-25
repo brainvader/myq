@@ -23,9 +23,37 @@ const getTags = async (req, res) => {
     res.json(tags)
 }
 
-// TODO: handler to add tag
+const addTag = async (req, res) => {
+    const { uid } = req.query
+    const { tag } = req.body
+
+    const quiz = {
+        uid: uid,
+        tags: [
+            {
+                uid: tag.uid,
+                tag_name: tag.tag_name
+            }
+        ]
+    }
+
+    const client = req.dbClient
+    const txn = client.newTxn()
+
+    try {
+        const tagged = await txn.mutate({ setJson: quiz, commitNow: true });
+        const newTag = tagged.data.uids
+        res.json(newTag)
+    } catch (error) {
+        throw error
+    } finally {
+        await txn.discard()
+    }
+}
+
 // TODO: handler to delete tag
 
 handler.get(getTags)
+handler.put(addTag)
 
 export default handler

@@ -28,7 +28,7 @@ const useTags = (url, searchTerm) => {
     }
 }
 
-const addTag = async (uid, tag) => {
+const attachTag = async (uid, tag) => {
     console.log(tag)
     const body = { tag: tag }
     const res = await fetch(`/api/quizzes/${uid}/tags`, {
@@ -66,8 +66,18 @@ export default function TagInput({ quiz }) {
         // updateTags(quiz.uid, newTags)
     }
 
-    const selectHandler = (event, data) => {
-        setSearchTerm('')
+    const selectHandler = async (event, data) => {
+        const tag_name = data.result.title
+        console.log('select', tag_name)
+        const hasTag = quiz.tags.find(tag => tag.tag_name === tag_name)
+        if (!hasTag) {
+            const selectedTag = tags.find(tag => tag.tag_name === tag_name)
+            console.log(selectedTag)
+            const tagged = await attachTag(quiz.uid, selectedTag)
+            console.log(tagged)
+            mutate(`/api/quizzes/${quiz.uid}`)
+            setSearchTerm('')
+        }
     }
 
     const detachHandler = async (event, data) => {
@@ -88,7 +98,7 @@ export default function TagInput({ quiz }) {
                     tag_name: searchTerm
                 }
                 console.log(`Add new tag`, newTag)
-                const tagged = await addTag(quiz.uid, newTag)
+                const tagged = await attachTag(quiz.uid, newTag)
                 setSearchTerm('')
                 mutate(`/api/quizzes/${quiz.uid}`)
             }

@@ -76,12 +76,7 @@ const addQuiz = async (req, res) => {
                 "content": "故に我あり"
             }
         ],
-        "tags": [
-            {
-                "uid": "_:tagName",
-                "tag_name": ""
-            }
-        ]
+        "tags": []
     }
 
     console.log('tags',)

@@ -59,6 +59,9 @@ const ListItem = ({ quiz }) => {
         if (!checked) pageActions.check(quiz.uid)
     }
 
+    // convert tags array into CSV string literal
+    const all_tags = (quiz.tags || []).map((tag) => tag.tag_name).join(',')
+
     return (
         <Table.Row>
             <Table.Cell width={1} textAlign='center'>
@@ -69,7 +72,7 @@ const ListItem = ({ quiz }) => {
             <Table.Cell width={2}>{quiz.title}</Table.Cell>
             <Table.Cell width={1}>{quiz.date}</Table.Cell>
             <Table.Cell width={4}>
-                {quiz.tags.map((tag) => tag.tag_name).join(',')}
+                {all_tags}
             </Table.Cell>
             <Table.Cell width={2} textAlign='center'>
                 <ItemControls quiz={quiz} />

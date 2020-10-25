@@ -19,25 +19,34 @@ const tagsFetcher = async (url, searchTerm) => {
 }
 
 const useTags = (url, searchTerm) => {
-    console.log(`searchTerm ${searchTerm}`)
-    const { data, mutate, error } = useSWR([url, searchTerm], tagsFetcher)
+    const { data, _, error } = useSWR([url, searchTerm], tagsFetcher)
 
     return {
         tags: data || [],
-        mutate: mutate,
         isLoading: !error && !data,
         isError: error
     }
 }
 
+const addTag = async (uid, tag) => {
+    console.log(tag)
+    const body = { tag: tag }
+    const res = await fetch(`/api/quizzes/${uid}/tags`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+    const newTag = await res.json()
+    console.log('new tag', newTag)
+    return newTag
+}
+
 export default function TagInput({ quiz }) {
 
     const [searchTerm, setSearchTerm] = useState("")
-    const { tags, mutate, isLoading, isError } = useTags(`/api/tags`, searchTerm)
+    const { tags, isLoading, isError } = useTags(`/api/tags`, searchTerm)
 
     if (isError) return <div>failed to load</div>
-
-    console.log(tags)
 
     const inputHandler = (event, data) => {
         const word = data.value
@@ -47,7 +56,7 @@ export default function TagInput({ quiz }) {
     }
 
     const selectHandler = (event, data) => {
-        setSearchTerm(data.result.title)
+        setSearchTerm('')
     }
 
     const removeHandler = (event, data) => {
@@ -55,17 +64,24 @@ export default function TagInput({ quiz }) {
         // TODO: DELETE /api/quizzes/{uid}/tags with tag uid
     }
 
-    const keyboardHandler = (event) => {
+    const keyboardHandler = async (event) => {
         if (event.key === 'Enter') {
             const isTag = tags.length === 0 ? false : true
-            const msg = isTag ? `Tag ${searchTerm} exist` : `${searchTerm} is new`
-            console.log(msg)
+            if (!isTag) {
+                const newTag = {
+                    uid: "_:newTag",
+                    tag_name: searchTerm
+                }
+                console.log(`Add new tag`, newTag)
+                const tagged = await addTag(quiz.uid, newTag)
+                setSearchTerm('')
+            }
         }
     }
 
-    const tagged = (quiz.tags || []).map(tag => {
+    const tagged = (quiz.tags || []).map((tag, i) => {
         return (
-            <List.Item>
+            <List.Item key={`${i}`}>
                 <Label
                     content={tag.tag_name}
                     removeIcon='delete'

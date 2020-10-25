@@ -69,7 +69,7 @@ export default function TagInput({ quiz }) {
     const selectHandler = async (event, data) => {
         const tag_name = data.result.title
         console.log('select', tag_name)
-        const hasTag = quiz.tags.find(tag => tag.tag_name === tag_name)
+        const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
         if (!hasTag) {
             const selectedTag = tags.find(tag => tag.tag_name === tag_name)
             console.log(selectedTag)

@@ -15,9 +15,13 @@ const getQuizzQuery = (uid) => {
             date
             question {
                 uid
+                type
+                content
             }
             answer {
                 uid
+                type
+                content
             }
             tags {
                 uid

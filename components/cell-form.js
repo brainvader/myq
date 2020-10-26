@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+
 import { Segment, Label } from 'semantic-ui-react'
 
 import EditorContext from '../components/editor/context'
@@ -11,7 +12,27 @@ const cellStyle = {
     paddingTop: '2em'
 }
 
-export default function CellForm({ name, quiz }) {
+const Cell = () => {
+    return (
+        <Segment style={cellStyle}>
+            <AddBeforeButton />
+            <CellInput />
+            <CellMenu />
+            <AddAfterButton />
+        </Segment>
+    )
+}
+
+const Cells = ({ cells }) => {
+    return (cells || []).map((cell, i) => <Cell key={i} cell={cell} />)
+}
+
+export default function CellForm({ name }) {
+    const { quiz } = useContext(EditorContext)
+
+    const key = name.toLowerCase()
+    const { [key]: cells } = quiz
+
     return (
         <Segment.Group>
 
@@ -19,14 +40,7 @@ export default function CellForm({ name, quiz }) {
                 <Label attached='top left'>{name}</Label>
             </Segment>
 
-            <Segment style={cellStyle}>
-                <AddBeforeButton />
-                <CellInput />
-                <CellMenu />
-                <AddAfterButton />
-            </Segment>
-export default function CellForm({ name }) {
-    const { quiz } = useContext(EditorContext)
+            <Cells cells={cells} />
 
         </Segment.Group>
     )

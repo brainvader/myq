@@ -79,8 +79,6 @@ const addQuiz = async (req, res) => {
         "tags": []
     }
 
-    console.log('tags',)
-
     const result = await txn.mutate({ setJson: quiz, commitNow: true })
 
     console.log(`create quiz with uid: ${result.data.uids.newQuiz}`)

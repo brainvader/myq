@@ -10,7 +10,7 @@ import CellForm from '../cell-form'
 import { useQuiz } from '../../lib/hooks'
 import { requestUpdateQuiz } from '../../logics/api'
 
-export default function Editor({ uid }) {
+export default function Editor() {
     const { data, mutate, isLoading, isError } = useQuiz(uid)
 
     const autoSave = async () => {
@@ -37,16 +37,16 @@ export default function Editor({ uid }) {
         <Container>
             <Grid centered>
                 <Grid.Row>
-                    <EditorMenu quiz={quiz} />
+                    <EditorMenu />
                 </Grid.Row>
 
                 <Grid.Row>
                     <Grid.Column>
                         <Grid.Row>
-                            <TitleInput quiz={quiz} />
+                            <TitleInput />
                         </Grid.Row>
                         <Grid.Row>
-                            <TagInput quiz={quiz} />
+                            <TagInput />
                         </Grid.Row>
                     </Grid.Column>
                 </Grid.Row>
@@ -55,8 +55,8 @@ export default function Editor({ uid }) {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <CellForm
-                            name='Question'
+                        <CellForm name='question' />
+                        <CellForm name='answer' />
                             quiz={quiz} />
                         <CellForm
                             name='Answer'

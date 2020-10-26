@@ -1,12 +1,16 @@
+import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import { Button } from 'semantic-ui-react'
 
+import EditorContext from '../components/editor/context'
+
 import { requestUpdateQuiz } from '../logics/api'
 
-export default function EditorMenu({ quiz }) {
+export default function EditorMenu() {
     const router = useRouter()
+    const quiz = useContext(EditorContext)
 
     const saveHandler = async () => {
         const newQuiz = await requestUpdateQuiz(quiz)

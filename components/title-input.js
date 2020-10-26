@@ -1,19 +1,24 @@
+import { useContext } from 'react'
 import { mutate } from 'swr'
 
 import { Input } from 'semantic-ui-react'
+
+import EditorContext from '../components/editor/context'
 
 const style = {
     width: '100%'
 }
 
 const updateTitle = (uid, title) => {
+    //TODO: PUT /api/quizzes/[uid] with  updated quiz
     mutate(`/api/quizzes/${uid}`, async current => {
         const newQuiz = { ...current, title: title }
         return newQuiz
     }, false)
 }
 
-export default function TitleInput({ quiz }) {
+export default function TitleInput() {
+    const { quiz } = useContext(EditorContext)
 
     const inputHandler = (event, data) => {
         updateTitle(quiz.uid, data.value)

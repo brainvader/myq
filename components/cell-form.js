@@ -1,5 +1,7 @@
+import { useContext } from 'react'
 import { Segment, Label } from 'semantic-ui-react'
 
+import EditorContext from '../components/editor/context'
 import CellMenu from './cell-menu'
 import CellInput from './cell-input'
 import { AddBeforeButton, AddAfterButton } from './cell-button'
@@ -23,6 +25,8 @@ export default function CellForm({ name, quiz }) {
                 <CellMenu />
                 <AddAfterButton />
             </Segment>
+export default function CellForm({ name }) {
+    const { quiz } = useContext(EditorContext)
 
         </Segment.Group>
     )

@@ -66,12 +66,14 @@ const addQuiz = async (req, res) => {
         "date": `${createdAt}`,
         "question": [
             {
+                "order": 1,
                 "type": "text",
                 "content": "我思う"
             }
         ],
         "answer": [
             {
+                "order": 1,
                 "type": "text",
                 "content": "故に我あり"
             }

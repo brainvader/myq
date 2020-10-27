@@ -15,11 +15,13 @@ const getQuizzQuery = (uid) => {
             date
             question {
                 uid
+                order
                 type
                 content
             }
             answer {
                 uid
+                order
                 type
                 content
             }

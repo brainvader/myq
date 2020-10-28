@@ -48,8 +48,9 @@ const Cell = ({ formType, cell }) => {
     )
 }
 
-const Cells = ({ cells }) => {
-    return (cells || []).map((cell, i) => <Cell key={i} cell={cell} />)
+const Cells = ({ formType, cells }) => {
+    const sorted = (cells || []).sort((a, b) => a.order - b.order)
+    return sorted.map((cell, i) => <Cell key={i} formType={formType} cell={cell} />)
 }
 
 export default function CellForm({ name }) {

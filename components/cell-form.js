@@ -13,51 +13,51 @@ const cellStyle = {
     paddingTop: '2em'
 }
 
-const Cell = ({ formType, cell }) => {
+const insertCell = async (uid, nodeType, order) => {
+    const body = {
+        nodeType: nodeType,
+        index: order
+    }
+    const res = await fetch(`/api/quizzes/${uid}/q-and-a`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+
+    mutate(`/api/quizzes/${uid}`)
+}
+
+const Cell = ({ nodeType, cell }) => {
     const { uid } = useContext(EditorContext)
 
-    const insert = async (type, order) => {
-        const body = {
-            type: type,
-            index: order
-        }
-        const res = await fetch(`/api/quizzes/${uid}/q-and-a`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
-
-        mutate(`/api/quizzes/${uid}`)
+    const insertBefore = async (event, data) => {
+        insertCell(uid, nodeType, cell.order)
     }
 
-    const addBefore = async (event, data) => {
-        insert(formType, cell.order)
-    }
-
-    const addAfter = (evet, data) => {
-        insert(formType, cell.order + 1)
+    const insertAfter = (evet, data) => {
+        insertCell(uid, nodeType, cell.order + 1)
     }
 
     return (
         <Segment style={cellStyle}>
-            {cell.order === 0 ? <AddBeforeButton onClick={(e) => addBefore(e, cell.order)} /> : null}
+            {cell.order === 0 ? <AddBeforeButton onClick={(e) => insertBefore(e, cell.order)} /> : null}
             <CellInput cell={cell} />
             <CellMenu />
-            <AddAfterButton onClick={(e) => addAfter(e, cell.order)} />
+            <AddAfterButton onClick={(e) => insertAfter(e, cell.order)} />
         </Segment>
     )
 }
 
-const Cells = ({ formType, cells }) => {
+const Cells = ({ nodeType }) => {
+    const { quiz } = useContext(EditorContext)
+    const cells = quiz[nodeType]
     const sorted = (cells || []).sort((a, b) => a.order - b.order)
-    return sorted.map((cell, i) => <Cell key={i} formType={formType} cell={cell} />)
+    return sorted.map((cell, i) => <Cell key={i} nodeType={nodeType} cell={cell} />)
 }
 
 export default function CellForm({ formType }) {
-    const { quiz } = useContext(EditorContext)
-
-    // Question or Answer
-    const type = formType.toLowerCase()
+    // question or answer
+    const nodeType = formType.toLowerCase()
 
     return (
         <Segment.Group>
@@ -66,7 +66,7 @@ export default function CellForm({ formType }) {
                 <Label attached='top left'>{formType}</Label>
             </Segment>
 
-            <Cells formType={type} cells={quiz[type]} />
+            <Cells nodeType={nodeType} />
 
         </Segment.Group>
     )

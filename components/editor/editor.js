@@ -45,8 +45,8 @@ export default function Editor() {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <CellForm formType='Question' />
-                        <CellForm formType='Answer' />
+                        <CellForm label='Question' />
+                        <CellForm label='Answer' />
 
                     </Grid.Column>
                 </Grid.Row>

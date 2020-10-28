@@ -5,10 +5,10 @@ const handler = nextConnect();
 
 handler.use(middleware);
 
-const query = (type) => (`
+const query = (nodeType) => (`
 query cells($uid: string) {
     cells(func: uid($uid)) {
-        ${type} {
+        ${nodeType} {
             uid
             type
             order
@@ -19,22 +19,22 @@ query cells($uid: string) {
 
 const insert = async (req, res) => {
     const { uid } = req.query
-    const { type, index } = req.body
-    console.log(`insert at ${index} of ${type}`)
+    const { nodeType, index } = req.body
+    console.log(`insert at ${index} of ${nodeType}`)
     const client = req.dbClient
     const txn = client.newTxn()
 
     try {
         const vars = { $uid: uid }
-        const result = await txn.queryWithVars(query(type), vars)
-        const [{ [type]: cells }] = result.data.cells
+        const result = await txn.queryWithVars(query(nodeType), vars)
+        const [{ [nodeType]: cells }] = result.data.cells
         console.log('cells: ', cells)
 
         const newCell = {
-            uid: `_:new${type}`,
+            uid: `_:new${nodeType}`,
             type: 'text',
             order: index,
-            content: type === 'question' ? `問${index}` : `答${index}`
+            content: nodeType === 'question' ? `問${index}` : `答${index}`
         }
         const newCells = cells.map(cell => {
             if (cell.order >= index) cell.order++
@@ -44,7 +44,7 @@ const insert = async (req, res) => {
         console.log(newCells)
         const newQuiz = {
             uid: uid,
-            [type]: newCells
+            [nodeType]: newCells
         }
         console.log(newQuiz)
         const inserted = await txn.mutate({ setJson: newQuiz, commitNow: true });

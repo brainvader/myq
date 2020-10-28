@@ -24,9 +24,10 @@ export function AddBeforeButton({ onClick }) {
         onClick={onClick} />
 }
 
-export function AddAfterButton() {
+export function AddAfterButton({ onClick }) {
     return <Button
         style={addAfterBtn}
         size='mini'
-        circular icon='plus' />
+        circular icon='plus'
+        onClick={onClick} />
 }

@@ -30,11 +30,11 @@ const insertCell = async (uid, nodeType, order) => {
 const Cell = ({ nodeType, cell }) => {
     const { uid } = useContext(EditorContext)
 
-    const insertBefore = (event, data) => {
+    const insertBefore = (event) => {
         insertCell(uid, nodeType, cell.order)
     }
 
-    const insertAfter = (evet, data) => {
+    const insertAfter = (evet) => {
         insertCell(uid, nodeType, cell.order + 1)
     }
 

@@ -6,7 +6,7 @@ import { Segment, Label } from 'semantic-ui-react'
 import EditorContext from '../components/editor/context'
 import CellMenu from './cell-menu'
 import CellInput from './cell-input'
-import { AddBeforeButton, AddAfterButton } from './cell-button'
+import { InsertBeforeButton, InsertAfterButton } from './cell-button'
 
 const cellStyle = {
     position: 'relative',
@@ -40,10 +40,10 @@ const Cell = ({ nodeName, cell }) => {
 
     return (
         <Segment style={cellStyle}>
-            {cell.order === 0 ? <AddBeforeButton onClick={(e) => insertBefore(e, cell.order)} /> : null}
+            {cell.order === 0 ? <InsertBeforeButton onClick={(e) => insertBefore(e, cell.order)} /> : null}
             <CellInput cell={cell} />
             <CellMenu />
-            <AddAfterButton onClick={(e) => insertAfter(e, cell.order)} />
+            <InsertAfterButton onClick={(e) => insertAfter(e, cell.order)} />
         </Segment>
     )
 }

@@ -16,7 +16,7 @@ const addAfterBtn = {
 }
 
 
-export function AddBeforeButton({ onClick }) {
+export function InsertBeforeButton({ onClick }) {
     return <Button
         style={addBeforeBtn}
         size='mini'
@@ -24,7 +24,7 @@ export function AddBeforeButton({ onClick }) {
         onClick={onClick} />
 }
 
-export function AddAfterButton({ onClick }) {
+export function InsertAfterButton({ onClick }) {
     return <Button
         style={addAfterBtn}
         size='mini'

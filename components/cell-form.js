@@ -53,20 +53,20 @@ const Cells = ({ formType, cells }) => {
     return sorted.map((cell, i) => <Cell key={i} formType={formType} cell={cell} />)
 }
 
-export default function CellForm({ name }) {
+export default function CellForm({ formType }) {
     const { quiz } = useContext(EditorContext)
 
-    const key = name.toLowerCase()
-    const { [key]: cells } = quiz
+    // Question or Answer
+    const type = formType.toLowerCase()
 
     return (
         <Segment.Group>
 
             <Segment>
-                <Label attached='top left'>{name}</Label>
+                <Label attached='top left'>{formType}</Label>
             </Segment>
 
-            <Cells cells={cells} />
+            <Cells formType={type} cells={quiz[type]} />
 
         </Segment.Group>
     )

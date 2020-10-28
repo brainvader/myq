@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { mutate } from 'swr'
 
 import { Segment, Label } from 'semantic-ui-react'
 
@@ -12,13 +13,37 @@ const cellStyle = {
     paddingTop: '2em'
 }
 
-const Cell = () => {
+const Cell = ({ formType, cell }) => {
+    const { uid } = useContext(EditorContext)
+
+    const insert = async (type, order) => {
+        const body = {
+            type: type,
+            index: order
+        }
+        const res = await fetch(`/api/quizzes/${uid}/q-and-a`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        mutate(`/api/quizzes/${uid}`)
+    }
+
+    const addBefore = async (event, data) => {
+        insert(formType, cell.order)
+    }
+
+    const addAfter = (evet, data) => {
+        insert(formType, cell.order + 1)
+    }
+
     return (
         <Segment style={cellStyle}>
-            <AddBeforeButton />
-            <CellInput />
+            {cell.order === 0 ? <AddBeforeButton onClick={(e) => addBefore(e, cell.order)} /> : null}
+            <CellInput cell={cell} />
             <CellMenu />
-            <AddAfterButton />
+            <AddAfterButton onClick={(e) => addAfter(e, cell.order)} />
         </Segment>
     )
 }

@@ -55,15 +55,15 @@ const Cells = ({ nodeType }) => {
     return sorted.map((cell, i) => <Cell key={i} nodeType={nodeType} cell={cell} />)
 }
 
-export default function CellForm({ formType }) {
+export default function CellForm({ label }) {
     // question or answer
-    const nodeType = formType.toLowerCase()
+    const nodeType = label.toLowerCase()
 
     return (
         <Segment.Group>
 
             <Segment>
-                <Label attached='top left'>{formType}</Label>
+                <Label attached='top left'>{label}</Label>
             </Segment>
 
             <Cells nodeType={nodeType} />

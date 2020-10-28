@@ -66,20 +66,20 @@ const addQuiz = async (req, res) => {
         "date": `${createdAt}`,
         "question": [
             {
+                "order": 0,
                 "type": "text",
                 "content": "我思う"
             }
         ],
         "answer": [
             {
+                "order": 0,
                 "type": "text",
                 "content": "故に我あり"
             }
         ],
         "tags": []
     }
-
-    console.log('tags',)
 
     const result = await txn.mutate({ setJson: quiz, commitNow: true })
 

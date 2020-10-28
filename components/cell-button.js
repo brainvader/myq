@@ -16,16 +16,18 @@ const addAfterBtn = {
 }
 
 
-export function AddBeforeButton() {
+export function AddBeforeButton({ onClick }) {
     return <Button
         style={addBeforeBtn}
         size='mini'
-        circular icon='plus' />
+        circular icon='plus'
+        onClick={onClick} />
 }
 
-export function AddAfterButton() {
+export function AddAfterButton({ onClick }) {
     return <Button
         style={addAfterBtn}
         size='mini'
-        circular icon='plus' />
+        circular icon='plus'
+        onClick={onClick} />
 }

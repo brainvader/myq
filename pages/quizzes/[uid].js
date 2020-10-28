@@ -2,21 +2,36 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 import Editor from '../../components/editor/editor'
+import EditorContext from '../../components/editor/context'
+
+import { useQuiz } from '../../lib/hooks'
 
 const Quiz = () => {
     const router = useRouter()
     const { uid } = router.query
+    const { data, mutate, isLoading, isError } = useQuiz(uid)
 
     useEffect(() => {
-        if (!uid) {
+        if (!(uid && data)) {
             router.push('/quizzes')
             // router.back()
         }
-    }, [uid])
+    }, [uid, data])
 
-    if (!uid) return <div>Back to List...</div>
+    if (!(uid && data)) return <div>Back to home</div>
+    if (isError) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
 
-    return <Editor uid={uid} />
+    const value = {
+        uid: uid,
+        quiz: data
+    }
+
+    return (
+        <EditorContext.Provider value={value} >
+            <Editor />
+        </EditorContext.Provider>
+    )
 }
 
 export default Quiz

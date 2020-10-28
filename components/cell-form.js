@@ -13,9 +13,9 @@ const cellStyle = {
     paddingTop: '2em'
 }
 
-const insertCell = async (uid, nodeType, order) => {
+const insertCell = async (uid, nodeName, order) => {
     const body = {
-        nodeType: nodeType,
+        nodeName: nodeName,
         index: order
     }
     const res = await fetch(`/api/quizzes/${uid}/q-and-a`, {
@@ -27,15 +27,15 @@ const insertCell = async (uid, nodeType, order) => {
     mutate(`/api/quizzes/${uid}`)
 }
 
-const Cell = ({ nodeType, cell }) => {
+const Cell = ({ nodeName, cell }) => {
     const { uid } = useContext(EditorContext)
 
     const insertBefore = (event) => {
-        insertCell(uid, nodeType, cell.order)
+        insertCell(uid, nodeName, cell.order)
     }
 
     const insertAfter = (evet) => {
-        insertCell(uid, nodeType, cell.order + 1)
+        insertCell(uid, nodeName, cell.order + 1)
     }
 
     return (
@@ -48,16 +48,16 @@ const Cell = ({ nodeType, cell }) => {
     )
 }
 
-const Cells = ({ nodeType }) => {
+const Cells = ({ nodeName }) => {
     const { quiz } = useContext(EditorContext)
-    const cells = quiz[nodeType]
+    const cells = quiz[nodeName]
     const sorted = (cells || []).sort((a, b) => a.order - b.order)
-    return sorted.map((cell, i) => <Cell key={i} nodeType={nodeType} cell={cell} />)
+    return sorted.map((cell, i) => <Cell key={i} nodeName={nodeName} cell={cell} />)
 }
 
 export default function CellForm({ label }) {
     // question or answer
-    const nodeType = label.toLowerCase()
+    const nodeName = label.toLowerCase()
 
     return (
         <Segment.Group>
@@ -66,7 +66,7 @@ export default function CellForm({ label }) {
                 <Label attached='top left'>{label}</Label>
             </Segment>
 
-            <Cells nodeType={nodeType} />
+            <Cells nodeName={nodeName} />
 
         </Segment.Group>
     )

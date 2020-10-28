@@ -17,7 +17,7 @@ query cells($uid: string) {
     }
 }`)
 
-const insert = async (req, res) => {
+const insertCell = async (req, res) => {
     const { uid } = req.query
     const { nodeType, index } = req.body
     console.log(`insert at ${index} of ${nodeType}`)
@@ -59,6 +59,6 @@ const insert = async (req, res) => {
 
 }
 
-handler.put(insert)
+handler.put(insertCell)
 
 export default handler

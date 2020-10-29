@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { Form, TextArea } from 'semantic-ui-react'
 
 import EditorContext from '../components/editor/context'
+import CellMenu from './cell-menu'
 
 const textAreaRows = 3
 
@@ -18,6 +19,7 @@ export default function CellInput({ cell }) {
             <TextArea
                 value={cell.content}
                 rows={textAreaRows} />
+            <CellMenu cell={cell} />
         </Form>
     )
 }

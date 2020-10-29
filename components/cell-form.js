@@ -42,7 +42,6 @@ const Cell = ({ nodeName, cell }) => {
         <Segment style={cellStyle}>
             {cell.order === 0 ? <InsertBeforeButton onClick={(e) => insertBefore(e, cell.order)} /> : null}
             <CellInput cell={cell} />
-            <CellMenu />
             <InsertAfterButton onClick={(e) => insertAfter(e, cell.order)} />
         </Segment>
     )

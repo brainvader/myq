@@ -5,8 +5,7 @@ const requestUpdateQuiz = async (quiz) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     })
-    const newQuiz = await res.json()
-    return newQuiz
+    return res
 }
 
 

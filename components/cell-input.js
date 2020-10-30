@@ -19,7 +19,6 @@ export default function CellInput({ cell }) {
             <TextArea
                 value={cell.content}
                 rows={textAreaRows} />
-            <CellMenu cell={cell} />
         </Form>
     )
 }

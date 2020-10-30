@@ -23,13 +23,12 @@ const Quiz = () => {
     if (isLoading) return <div>loading...</div>
 
     const value = {
-        uid: uid,
-        quiz: data
+        uid: uid
     }
 
     return (
         <EditorContext.Provider value={value} >
-            <Editor />
+            <Editor quiz={data} />
         </EditorContext.Provider>
     )
 }

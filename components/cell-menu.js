@@ -4,6 +4,7 @@ import { mutate } from 'swr'
 import { Button } from 'semantic-ui-react'
 
 import EditorContext from '../components/editor/context'
+import CellFormContext from '../components/cell-form/context'
 
 const cellMenu = {
     marginTop: `0.5em`,
@@ -23,6 +24,7 @@ const updateCell = async (cell) => {
 
 export default function CellMenu({ cell }) {
     const { uid } = useContext(EditorContext)
+    const { formType, cellsCount } = useContext(CellFormContext)
 
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }

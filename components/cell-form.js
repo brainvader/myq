@@ -4,6 +4,8 @@ import { mutate } from 'swr'
 import { Segment, Label } from 'semantic-ui-react'
 
 import EditorContext from '../components/editor/context'
+import CellFormContext from '../components/cell-form/context'
+
 import CellMenu from './cell-menu'
 import CellInput from './cell-input'
 import { InsertBeforeButton, InsertAfterButton } from './cell-button'
@@ -27,15 +29,16 @@ const insertCell = async (uid, nodeName, order) => {
     mutate(`/api/quizzes/${uid}`)
 }
 
-const Cell = ({ nodeName, cell }) => {
+const Cell = ({ cell }) => {
     const { uid } = useContext(EditorContext)
+    const { formType } = useContext(CellFormContext)
 
     const insertBefore = (event) => {
-        insertCell(uid, nodeName, cell.order)
+        insertCell(uid, formType, cell.order)
     }
 
     const insertAfter = (evet) => {
-        insertCell(uid, nodeName, cell.order + 1)
+        insertCell(uid, formType, cell.order + 1)
     }
 
     return (
@@ -48,16 +51,14 @@ const Cell = ({ nodeName, cell }) => {
     )
 }
 
-const Cells = ({ nodeName }) => {
-    const { quiz } = useContext(EditorContext)
-    const cells = quiz[nodeName]
-    const sorted = (cells || []).sort((a, b) => a.order - b.order)
-    return sorted.map((cell, i) => <Cell key={i} nodeName={nodeName} cell={cell} />)
-}
+const Cells = ({ cells }) => cells.map((cell, i) => <Cell key={i} cell={cell} />)
 
-export default function CellForm({ label }) {
-    // question or answer
-    const nodeName = label.toLowerCase()
+export default function CellForm({ cells }) {
+    const { formType } = useContext(CellFormContext)
+    const label = formType
+        .split('')
+        .map((char, i) => i === 0 ? char.toUpperCase() : char)
+        .join('')
 
     return (
         <Segment.Group>
@@ -66,8 +67,8 @@ export default function CellForm({ label }) {
                 <Label attached='top left'>{label}</Label>
             </Segment>
 
-            <Cells nodeName={nodeName} />
+            <Cells cells={cells} />
 
-        </Segment.Group>
+        </Segment.Group >
     )
 }

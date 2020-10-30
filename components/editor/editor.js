@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { mutate } from 'swr'
+
 import { Grid, Container } from 'semantic-ui-react'
 
 import EditorMenu from '../editor-menu'
@@ -11,19 +14,14 @@ import { requestUpdateQuiz } from '../../logics/api'
 
 export default function Editor({ quiz }) {
     const autoSave = async () => {
-        const newQuiz = await requestUpdateQuiz(data)
-        mutate(newQuiz)
+        const res = await requestUpdateQuiz(quiz)
+        if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
-    // useEffect(() => {
-    // const interval = data ? setInterval(async () => {
-    //     console.log(`pre auto save`, data.tags)
-    //     const newQuiz = await requestUpdateQuiz(data)
-    //     console.log(`post auto save`, newQuiz.tags)
-    //     mutate(newQuiz)
-    // }, 1000) : null
-    // return () => clearInterval(interval)
-    // }, [data])
+    useEffect(() => {
+        const interval = quiz ? setInterval(autoSave, 1000) : null
+        return () => clearInterval(interval)
+    }, [quiz])
 
     const question = (quiz.question || []).sort((a, b) => a.order - b.order)
     const answer = (quiz.answer || []).sort((a, b) => a.order - b.order)
@@ -32,7 +30,7 @@ export default function Editor({ quiz }) {
         <Container>
             <Grid centered>
                 <Grid.Row>
-                    <EditorMenu />
+                    <EditorMenu quiz={quiz} />
                 </Grid.Row>
 
                 <Grid.Row>

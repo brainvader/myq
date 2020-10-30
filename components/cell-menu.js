@@ -40,13 +40,25 @@ export default function CellMenu({ cell }) {
     const { uid } = useContext(EditorContext)
     const { formType, cellsCount } = useContext(CellFormContext)
 
+    const deleteCell = async (event, data) => {
+        const body = {
+            quizUid: uid,
+            edgeName: formType
+        }
+        const res = await fetch(`/api/cells/${cell.uid}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        })
+
+        if (res.ok) mutate(`/api/quizzes/${uid}`)
+    }
+
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }
         const response = await updateCell(newCell)
         if (response.ok) mutate(`/api/quizzes/${uid}`)
     }
-
-    const handleButtonClick = (event, data) => console.log(`${JSON.stringify(data)}`)
 
     const moveUp = async (event, data) => {
         const newOrder = data.order - 1
@@ -84,7 +96,7 @@ export default function CellMenu({ cell }) {
             <Button.Group>
                 <Button
                     icon='minus'
-                    onClick={handleButtonClick} />
+                        onClick={e => deleteCell(e, cell)} />
                 {cell.order !== 0
                     ? <Button
                         icon='caret up'

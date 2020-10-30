@@ -18,7 +18,7 @@ const updateTitle = async (uid, title) => {
 }
 
 export default function TitleInput({ quiz }) {
-    const [title, setTitle] = useState("")
+    const [title, setTitle] = useState(quiz.title)
 
     const inputHandler = (event, data) => {
         setTitle(data.value)

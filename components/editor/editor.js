@@ -58,7 +58,7 @@ export default function Editor({ quiz }) {
                         </CellFormContext.Provider>
 
                         <CellFormContext.Provider value={{
-                            formType: 'question',
+                            formType: 'answer',
                             cellsCount: answer.length
                         }}>
                             <CellForm cells={answer} />

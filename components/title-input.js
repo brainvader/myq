@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { mutate } from 'swr'
 
 import { Input } from 'semantic-ui-react'
@@ -6,17 +7,29 @@ const style = {
     width: '100%'
 }
 
-const updateTitle = (uid, title) => {
-    //TODO: PUT /api/quizzes/[uid] with  updated quiz
-    mutate(`/api/quizzes/${uid}`, async current => {
-        const newQuiz = { ...current, title: title }
-        return newQuiz
-    }, false)
+const updateTitle = async (uid, title) => {
+    const body = { title: title }
+    const res = await fetch(`/api/quizzes/${uid}/title`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+    return res
 }
 
 export default function TitleInput({ quiz }) {
+    const [title, setTitle] = useState("")
+
     const inputHandler = (event, data) => {
-        updateTitle(quiz.uid, data.value)
+        setTitle(data.value)
+    }
+
+    const keyboardHandler = async (event) => {
+        console.log(event.key)
+        if (event.key === 'Enter') {
+            const res = await updateTitle(quiz.uid, title)
+            if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
+        }
     }
 
     return (
@@ -24,7 +37,8 @@ export default function TitleInput({ quiz }) {
             style={style}
             icon="question"
             placeholder='Title'
-            value={quiz.title}
+            value={title}
+            onKeyUp={keyboardHandler}
             onChange={inputHandler} />
     )
 }

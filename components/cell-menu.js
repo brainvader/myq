@@ -85,12 +85,16 @@ export default function CellMenu({ cell }) {
                 <Button
                     icon='minus'
                     onClick={handleButtonClick} />
-                <Button
-                    icon='caret up'
+                {cell.order !== 0
+                    ? <Button
+                        icon='caret up'
                         onClick={e => moveUp(e, cell)} />
-                <Button
-                    icon='caret down'
+                    : null}
+                {cell.order !== cellsCount - 1
+                    ? <Button
+                        icon='caret down'
                         onClick={e => { moveDown(e, cell) }} />
+                    : null}
             </Button.Group>
         </div>
     )

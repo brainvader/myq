@@ -22,6 +22,20 @@ const updateCell = async (cell) => {
     return res
 }
 
+const swapCells = async (cell, newOrder, edgeName) => {
+    const body = {
+        original: cell,
+        newOrder: newOrder,
+        edgeName: edgeName
+    }
+    const res = await fetch(`/api/cells/orders`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    })
+    return res
+}
+
 export default function CellMenu({ cell }) {
     const { uid } = useContext(EditorContext)
     const { formType, cellsCount } = useContext(CellFormContext)
@@ -33,6 +47,18 @@ export default function CellMenu({ cell }) {
     }
 
     const handleButtonClick = (event, data) => console.log(`${JSON.stringify(data)}`)
+
+    const moveUp = async (event, data) => {
+        const newOrder = data.order - 1
+        const res = await swapCells(data, newOrder, formType)
+        if (res.ok) mutate(`/api/quizzes/${uid}`)
+    }
+
+    const moveDown = async (event, data) => {
+        const newOrder = data.order + 1
+        const res = await swapCells(data, newOrder, formType)
+        if (res.ok) mutate(`/api/quizzes/${uid}`)
+    }
 
     return (
         <div style={cellMenu}>
@@ -61,10 +87,10 @@ export default function CellMenu({ cell }) {
                     onClick={handleButtonClick} />
                 <Button
                     icon='caret up'
-                    onClick={handleButtonClick} />
+                        onClick={e => moveUp(e, cell)} />
                 <Button
                     icon='caret down'
-                    onClick={handleButtonClick} />
+                        onClick={e => { moveDown(e, cell) }} />
             </Button.Group>
         </div>
     )

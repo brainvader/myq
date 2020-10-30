@@ -21,7 +21,13 @@ export default function TitleInput({ quiz }) {
     const [title, setTitle] = useState(quiz.title)
 
     const inputHandler = (event, data) => {
-        setTitle(data.value)
+        const newTitle = data.value
+        setTitle(newTitle)
+        // update cache quiz
+        mutate(`/api/quizzes/${quiz.uid}`, async current => {
+            const newQuiz = { ...quiz, title: newTitle }
+            return newQuiz
+        }, false)
     }
 
     const keyboardHandler = async (event) => {

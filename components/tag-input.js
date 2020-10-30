@@ -1,9 +1,7 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 
 import { Search, Label, List } from 'semantic-ui-react'
-
-import EditorContext from '../components/editor/context'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
@@ -54,9 +52,7 @@ const detachTag = async (uid, tag) => {
     return res
 }
 
-export default function TagInput() {
-    const { quiz } = useContext(EditorContext)
-
+export default function TagInput({ quiz }) {
     const [searchTerm, setSearchTerm] = useState("")
     const { tags, isLoading, isError } = useTags(`/api/tags`, searchTerm)
 

@@ -1,9 +1,6 @@
-import { useContext } from 'react'
 import { mutate } from 'swr'
 
 import { Input } from 'semantic-ui-react'
-
-import EditorContext from '../components/editor/context'
 
 const style = {
     width: '100%'
@@ -17,9 +14,7 @@ const updateTitle = (uid, title) => {
     }, false)
 }
 
-export default function TitleInput() {
-    const { quiz } = useContext(EditorContext)
-
+export default function TitleInput({ quiz }) {
     const inputHandler = (event, data) => {
         updateTitle(quiz.uid, data.value)
     }

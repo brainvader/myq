@@ -5,9 +5,11 @@ import TitleInput from '../title-input'
 import TagInput from '../tag-input'
 import CellForm from '../cell-form'
 
+import CellFormContext from '../../components/cell-form/context'
+
 import { requestUpdateQuiz } from '../../logics/api'
 
-export default function Editor() {
+export default function Editor({ quiz }) {
     const autoSave = async () => {
         const newQuiz = await requestUpdateQuiz(data)
         mutate(newQuiz)
@@ -23,6 +25,9 @@ export default function Editor() {
     // return () => clearInterval(interval)
     // }, [data])
 
+    const question = (quiz.question || []).sort((a, b) => a.order - b.order)
+    const answer = (quiz.answer || []).sort((a, b) => a.order - b.order)
+
     return (
         <Container>
             <Grid centered>
@@ -33,10 +38,10 @@ export default function Editor() {
                 <Grid.Row>
                     <Grid.Column>
                         <Grid.Row>
-                            <TitleInput />
+                            <TitleInput quiz={quiz} />
                         </Grid.Row>
                         <Grid.Row>
-                            <TagInput />
+                            <TagInput quiz={quiz} />
                         </Grid.Row>
                     </Grid.Column>
                 </Grid.Row>
@@ -45,8 +50,19 @@ export default function Editor() {
                 <Grid.Row columns={1}>
                     <Grid.Column textAlign='center'>
 
-                        <CellForm label='Question' />
-                        <CellForm label='Answer' />
+                        <CellFormContext.Provider value={{
+                            formType: 'question',
+                            cellsCount: question.length
+                        }}>
+                            <CellForm cells={question} />
+                        </CellFormContext.Provider>
+
+                        <CellFormContext.Provider value={{
+                            formType: 'question',
+                            cellsCount: answer.length
+                        }}>
+                            <CellForm cells={answer} />
+                        </CellFormContext.Provider>
 
                     </Grid.Column>
                 </Grid.Row>

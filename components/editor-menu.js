@@ -4,17 +4,14 @@ import { mutate } from 'swr'
 
 import { Button } from 'semantic-ui-react'
 
-import EditorContext from '../components/editor/context'
-
 import { requestUpdateQuiz } from '../logics/api'
 
-export default function EditorMenu() {
+export default function EditorMenu({ quiz }) {
     const router = useRouter()
-    const quiz = useContext(EditorContext)
 
     const saveHandler = async () => {
-        const newQuiz = await requestUpdateQuiz(quiz)
-        mutate(`/api/quizzes/${quiz.uid}`)
+        const res = await requestUpdateQuiz(quiz)
+        if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const homeHandler = async () => {

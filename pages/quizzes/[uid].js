@@ -9,16 +9,10 @@ import { useQuiz } from '../../lib/hooks'
 const Quiz = () => {
     const router = useRouter()
     const { uid } = router.query
+    const noQuery = Object.keys(router.query).length === 0
     const { data, mutate, isLoading, isError } = useQuiz(uid)
 
-    useEffect(() => {
-        if (!(uid && data)) {
-            router.push('/quizzes')
-            // router.back()
-        }
-    }, [uid, data])
-
-    if (!(uid && data)) return <div>Back to home</div>
+    if (noQuery) return <div> failed to routing</div>
     if (isError) return <div>failed to load</div>
     if (isLoading) return <div>loading...</div>
 

@@ -18,21 +18,18 @@ const updateTitle = async (uid, title) => {
 }
 
 export default function TitleInput({ quiz }) {
-    const [title, setTitle] = useState(quiz.title)
-
     const inputHandler = (event, data) => {
         const newTitle = data.value
-        setTitle(newTitle)
-        // update cached quiz without revalidation
         mutate(`/api/quizzes/${quiz.uid}`, async current => {
-            const newQuiz = { ...quiz, title: newTitle }
+            const currentTitle = quiz.title
+            const newQuiz = { ...current, title: newTitle }
             return newQuiz
         }, false)
     }
 
     const keyboardHandler = async (event) => {
         if (event.key === 'Enter') {
-            const res = await updateTitle(quiz.uid, title)
+            const res = await updateTitle(quiz.uid, quiz.title)
             if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
         }
     }
@@ -42,7 +39,7 @@ export default function TitleInput({ quiz }) {
             style={style}
             icon="question"
             placeholder='Title'
-            value={title}
+            value={quiz.title}
             onKeyUp={keyboardHandler}
             onChange={inputHandler} />
     )

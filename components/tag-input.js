@@ -49,19 +49,21 @@ const detachTag = async (uid, tag) => {
 
 export default function TagInput({ quiz }) {
     const [searchTerm, setSearchTerm] = useState("")
+    // get all tags defined
     const { tags, isLoading, isError } = useTags(`/api/tags`, searchTerm)
 
     if (isError) return <div>failed to load</div>
 
+    // set input string to search term
     const inputHandler = (event, data) => {
         const word = data.value
         setSearchTerm(word)
-        // const newTags = data.value.split(',').filter(() => true)
-        // updateTags(quiz.uid, newTags)
     }
 
+    // select tag from the candidates
     const selectHandler = async (event, data) => {
         const tag_name = data.result.title
+        // avoid duplicate tags in the same quiz
         const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
         if (!hasTag) {
             const selectedTag = tags.find(tag => tag.tag_name === tag_name)
@@ -71,6 +73,7 @@ export default function TagInput({ quiz }) {
         }
     }
 
+    // detach a tag from the quiz
     const detachHandler = async (event, data) => {
         const tag_name = data.content
         const tagIndex = quiz.tags.findIndex(tag => tag.tag_name === tag_name)
@@ -82,6 +85,7 @@ export default function TagInput({ quiz }) {
     const keyboardHandler = async (event) => {
         if (event.key === 'Enter') {
             const isTag = tags.length === 0 ? false : true
+            // create a new tag node only when there are no once
             if (!isTag) {
                 const newTag = {
                     uid: "_:newTag",

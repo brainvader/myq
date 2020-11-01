@@ -23,7 +23,7 @@ export default function TitleInput({ quiz }) {
     const inputHandler = (event, data) => {
         const newTitle = data.value
         setTitle(newTitle)
-        // update cache quiz
+        // update cached quiz without revalidation
         mutate(`/api/quizzes/${quiz.uid}`, async current => {
             const newQuiz = { ...quiz, title: newTitle }
             return newQuiz

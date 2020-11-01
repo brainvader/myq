@@ -14,11 +14,13 @@ import { requestUpdateQuiz } from '../../logics/api'
 
 export default function Editor({ quiz }) {
     const autoSave = async () => {
+        // update quiz
         const res = await requestUpdateQuiz(quiz)
         if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     useEffect(() => {
+        // execute save every 1 sec
         const interval = quiz ? setInterval(autoSave, 1000) : null
         return () => clearInterval(interval)
     }, [quiz])

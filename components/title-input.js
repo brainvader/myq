@@ -31,7 +31,6 @@ export default function TitleInput({ quiz }) {
     }
 
     const keyboardHandler = async (event) => {
-        console.log(event.key)
         if (event.key === 'Enter') {
             const res = await updateTitle(quiz.uid, title)
             if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)

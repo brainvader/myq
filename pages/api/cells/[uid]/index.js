@@ -19,7 +19,6 @@ query quiz($uid: string) {
 const deleteCell = async (req, res) => {
     const { uid } = req.query
     const { quizUid, edgeName } = req.body
-    console.log(`remove cell ${uid} from ${quizUid} of ${edgeName}`)
 
     const vars = { $uid: quizUid }
     const txn = req.dbClient.newTxn()
@@ -66,8 +65,6 @@ const deleteCell = async (req, res) => {
 
 const updateCell = async (req, res) => {
     const { cell } = req.body
-
-    console.log(cell)
 
     const txn = req.dbClient.newTxn()
 

@@ -30,7 +30,6 @@ const reducer = (state, action) => {
         case UNCHECK: {
             const uid = action.payload
             const result = state.checked.delete(uid)
-            console.log(`delete ${uid} is ${result}`)
             return {
                 ...state
             }
@@ -54,7 +53,6 @@ const PageProvider = (props) => {
             dispatch({ type: CHANGE_PAGE, payload: activePage })
         },
         check: (uid) => {
-            console.log(`check ${uid}`)
             dispatch({ type: CHECK, payload: uid })
         },
         uncheck: (uid) => {

@@ -5,9 +5,7 @@ import { Search, Label, List } from 'semantic-ui-react'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
-        console.log('curret', tags)
         const newQuiz = { ...current, tags: [...tags] }
-        console.log(`update tags`, newQuiz.tags)
         return newQuiz
     }, false)
 }
@@ -29,7 +27,6 @@ const useTags = (url, searchTerm) => {
 }
 
 const attachTag = async (uid, tag) => {
-    console.log(tag)
     const body = { tag: tag }
     const res = await fetch(`/api/quizzes/${uid}/tags`, {
         method: 'PUT',
@@ -37,7 +34,6 @@ const attachTag = async (uid, tag) => {
         body: JSON.stringify(body)
     })
     const newTag = await res.json()
-    console.log('new tag', newTag)
     return newTag
 }
 
@@ -48,7 +44,6 @@ const detachTag = async (uid, tag) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     })
-    console.log(res)
     return res
 }
 
@@ -67,20 +62,16 @@ export default function TagInput({ quiz }) {
 
     const selectHandler = async (event, data) => {
         const tag_name = data.result.title
-        console.log('select', tag_name)
         const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
         if (!hasTag) {
             const selectedTag = tags.find(tag => tag.tag_name === tag_name)
-            console.log(selectedTag)
             const tagged = await attachTag(quiz.uid, selectedTag)
-            console.log(tagged)
             mutate(`/api/quizzes/${quiz.uid}`)
             setSearchTerm('')
         }
     }
 
     const detachHandler = async (event, data) => {
-        console.log(`remove ${data.content} tag`)
         const tag_name = data.content
         const tagIndex = quiz.tags.findIndex(tag => tag.tag_name === tag_name)
         const tag = quiz.tags[tagIndex]
@@ -96,7 +87,6 @@ export default function TagInput({ quiz }) {
                     uid: "_:newTag",
                     tag_name: searchTerm
                 }
-                console.log(`Add new tag`, newTag)
                 const tagged = await attachTag(quiz.uid, newTag)
                 setSearchTerm('')
                 mutate(`/api/quizzes/${quiz.uid}`)

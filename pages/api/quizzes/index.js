@@ -83,8 +83,6 @@ const addQuiz = async (req, res) => {
 
     const result = await txn.mutate({ setJson: quiz, commitNow: true })
 
-    console.log(`create quiz with uid: ${result.data.uids.newQuiz}`)
-
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
     res.json({ uid: result.data.uids.newQuiz })

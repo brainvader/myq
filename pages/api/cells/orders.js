@@ -20,21 +20,15 @@ query parents($uid: string) {
 
 const swapCells = async (req, res) => {
     const { original, newOrder, edgeName } = req.body
-    console.log(edgeName)
 
     const vars = { $uid: original.uid }
-    console.log(vars)
-    console.log(edgeName)
     const txn = req.dbClient.newTxn()
     const result = await txn.queryWithVars(query(edgeName), vars)
 
     // TODO: pass quiz uid directly as path parameter
     const { parents: [parent] } = result.data
-    console.log(parent)
     const { [`~${edgeName}`]: quizzes } = parent
-    console.log(quizzes)
     const [quiz] = quizzes
-    console.log(quiz)
     const { [edgeName]: cells } = quiz
 
     const [movedOver] = (cells || [])
@@ -45,7 +39,6 @@ const swapCells = async (req, res) => {
     const swappedCells = [movedOver, moved]
     const cellSwapped = await txn.mutate({ setJson: swappedCells, commitNow: true });
 
-    console.log(cellSwapped.data)
     res.json({ swapped: [moved.uid, movedOver.uid] })
 }
 

@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
@@ -16,7 +17,7 @@ export default function EditorMenu({ quiz }) {
 
     // go back to the quiz list page
     const homeHandler = async () => {
-        router.push('/quizzes')
+        router.push(`/quizzes`)
     }
 
     return (

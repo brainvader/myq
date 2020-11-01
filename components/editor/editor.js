@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import { Grid, Container } from 'semantic-ui-react'
@@ -13,16 +14,37 @@ import CellFormContext from '../../components/cell-form/context'
 import { requestUpdateQuiz } from '../../logics/api'
 
 export default function Editor({ quiz }) {
+    const router = useRouter()
+
     const autoSave = async () => {
         // update quiz
+        console.log(`auto save`)
         const res = await requestUpdateQuiz(quiz)
         if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
+    }
+
+    const saveBeforeLeavingPage = (event) => {
+        autoSave()
+
+        // disable because it feels like redundant to make confimation
+        // every time leaving from the editor page
+        // const confirmed = window.confirm("現在の内容を保存して戻りますか?")
+        // if (confirmed) {
+        //     autoSave()
+        // }
     }
 
     useEffect(() => {
         // execute save every 1 sec
         const interval = quiz ? setInterval(autoSave, 1000) : null
-        return () => clearInterval(interval)
+
+        // call saveBeforeLeavingPage when chainging route in its child components
+        router.events.on('routeChangeStart', saveBeforeLeavingPage)
+
+        return () => {
+            clearInterval(interval)
+            router.events.off('routeChangeStart', saveBeforeLeavingPage)
+        }
     }, [quiz])
 
     const question = (quiz.question || []).sort((a, b) => a.order - b.order)

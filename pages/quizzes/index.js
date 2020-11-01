@@ -36,14 +36,17 @@ const DeleteQuizButton = () => {
     const { pageState, pageActions } = usePage()
 
     const deleteCheckedHandler = async () => {
+        // get checked quiz UIDs
         const uids = Array.from(pageState.checked)
         const body = { uids: uids }
+        // delete all checked quizzes
         const res = await fetch('/api/quizzes', {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         })
 
+        // reset checked quizzes
         pageActions.uncheckAll()
         mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
@@ -57,6 +60,7 @@ const ReloadQuizzesButton = ({ handler }) => {
 
 function Content() {
 
+    // TODO: how to relaod?
     const reloadHandler = () => mutate()
 
     return (

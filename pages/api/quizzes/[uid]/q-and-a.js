@@ -1,6 +1,8 @@
 import nextConnect from 'next-connect';
 import middleware from '../../../../middleware/database';
 
+// TODO: rename this file to cells
+
 const handler = nextConnect();
 
 handler.use(middleware);
@@ -58,6 +60,7 @@ const insertCell = async (req, res) => {
 
 }
 
+// TODO: Use POST verb for insertCell
 handler.put(insertCell)
 
 export default handler

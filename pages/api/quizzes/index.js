@@ -40,6 +40,7 @@ const getQuizzes = async (req, res) => {
 
     const totalPages = Math.ceil(totalQuizzes / QUIZ_PER_PAGE)
 
+    // get only the quizzes that can be　displayed in a single page, i.e. pagination
     const [start, end] = getVisibleRange(page)
     const quizzes = allQuizzes.slice(start, end)
 
@@ -54,13 +55,14 @@ const getQuizzes = async (req, res) => {
     res.json(body)
 }
 
+// create a blank quiz node
 const addQuiz = async (req, res) => {
     const createdAt = req.body.createdAt
     const client = req.dbClient
     const txn = client.newTxn()
 
     const quiz = {
-        "uid": "_:newQuiz",
+        "uid": "_:newQuiz", // blank node
         "title": "新規クイズ",
         "user": "brainvader",
         "date": `${createdAt}`,
@@ -106,6 +108,8 @@ const getQuizzQuery = (uid) => {
     }`
 }
 
+
+// TODO: Update delete logic
 const deleteQuizzes = async (req, res) => {
     const uids = req.body.uids
 

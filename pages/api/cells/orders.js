@@ -25,15 +25,19 @@ const swapCells = async (req, res) => {
     const txn = req.dbClient.newTxn()
     const result = await txn.queryWithVars(query(edgeName), vars)
 
-    // TODO: pass quiz uid directly as path parameter
+    // get a parent node from a cell with reverse edge
     const { parents: [parent] } = result.data
     const { [`~${edgeName}`]: quizzes } = parent
     const [quiz] = quizzes
     const { [edgeName]: cells } = quiz
 
+    // swap the cell orders
     const [movedOver] = (cells || [])
+        // find the cell to move over
         .filter(cell => cell.order === newOrder)
+        // Update the cell order
         .map(cell => ({ ...cell, order: original.order }))
+    // move in the new order
     const moved = { uid: original.uid, order: newOrder }
 
     const swappedCells = [movedOver, moved]

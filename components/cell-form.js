@@ -33,6 +33,8 @@ const Cell = ({ cell }) => {
     const { uid } = useContext(EditorContext)
     const { formType } = useContext(CellFormContext)
 
+    // insert new cell at the poistion of the clicked cell and
+    // the following cell's orders are incremented
     const insertBefore = (event) => {
         insertCell(uid, formType, cell.order)
     }

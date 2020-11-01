@@ -8,11 +8,13 @@ import { requestUpdateQuiz } from '../logics/api'
 export default function EditorMenu({ quiz }) {
     const router = useRouter()
 
+    // save the current state of quiz
     const saveHandler = async () => {
         const res = await requestUpdateQuiz(quiz)
         if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
+    // go back to the quiz list page
     const homeHandler = async () => {
         router.push('/quizzes')
     }

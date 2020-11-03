@@ -1,3 +1,5 @@
+import * as fs from 'fs-extra';
+
 import nextConnect from 'next-connect';
 import middleware from '../../../../middleware/database';
 
@@ -47,6 +49,14 @@ const saveQuiz = async (req, res) => {
     try {
         const result = await txn.mutate({ setJson: quiz })
         await txn.commit();
+
+        const [yyyymmdd, _] = quiz.date.split(`T`)
+        const file = yyyymmdd.split('-').join('/').concat(`/${quiz.uid}.json`)
+        console.log(`file  ${file}`)
+
+        const output = JSON.stringify(quiz, null, 4)
+        await fs.outputFile(`content/quizzes/${file}`, output)
+
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
         res.json(quiz)

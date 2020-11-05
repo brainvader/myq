@@ -27,18 +27,22 @@ const addTag = async (req, res) => {
     const { uid } = req.query
     const { tag } = req.body
 
-    const quiz = {
-        uid: uid,
-        tags: [
-            {
-                uid: tag.uid,
-                tag_name: tag.tag_name
-            }
-        ]
-    }
-
     const client = req.dbClient
     const txn = client.newTxn()
+
+    try {
+        const quiz = {
+            uid: uid,
+            tags: [
+                {
+                    uid: tag.uid,
+                    tag_name: tag.tag_name
+                }
+            ]
+        }
+        const result = await txn.mutate({ setJson: quiz, commitNow: true });
+        const tagged = result.data.uids
+        res.json(tagged)
 
     try {
         const tagged = await txn.mutate({ setJson: quiz, commitNow: true });

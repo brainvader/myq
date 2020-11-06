@@ -83,6 +83,8 @@ export default function TagInput({ quiz }) {
     }
 
     const keyboardHandler = async (event) => {
+        // never enter empty string
+        if (searchTerm === '') return
         if (event.key === 'Enter') {
             const isTag = tags.length === 0 ? false : true
             // create a new tag node only when there are no once

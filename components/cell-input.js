@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { mutate } from 'swr'
 
 import { Form, TextArea } from 'semantic-ui-react'
@@ -12,9 +12,11 @@ export default function CellInput({ cell }) {
     const { uid } = useContext(EditorContext)
     const { formType } = useContext(CellFormContext)
 
+    const [content, setContent] = useState(cell.content)
+
     const inputHandler = (event, data) => {
         const content = data.value
-
+        setContent(content)
         // update cached quiz without revalidation
         mutate(`/api/quizzes/${uid}`, async current => {
             const currentCells = (current[formType] || [])
@@ -26,7 +28,6 @@ export default function CellInput({ cell }) {
                     : currentCell
             })
             const newQuiz = { ...current, [formType]: [...updatedCells] }
-            console.log(newQuiz)
             return newQuiz
         }, false)
     }
@@ -34,7 +35,7 @@ export default function CellInput({ cell }) {
     return (
         <Form>
             <TextArea
-                value={cell.content}
+                value={content}
                 rows={textAreaRows}
                 onInput={inputHandler} />
         </Form>

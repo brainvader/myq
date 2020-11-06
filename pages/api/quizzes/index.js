@@ -1,6 +1,9 @@
+import * as fs from 'fs-extra'
+
 import nextConnect from 'next-connect';
 import middleware from '../../../middleware/database';
 
+import { fileNameFromQuiz } from '../../../lib/utils'
 import { numOfTaggedQuizzes } from '../../../logics/transactions'
 
 const handler = nextConnect();
@@ -88,9 +91,17 @@ const addQuiz = async (req, res) => {
     try {
         const result = await txn.mutate({ setJson: quiz })
         await txn.commit();
+        const uid = result.data.uids.newQuiz
+        const newQuiz = {
+            ...quiz,
+            uid: uid
+        }
+        const file = fileNameFromQuiz(newQuiz)
+        const output = JSON.stringify(newQuiz, null, 4)
+        await fs.outputFile(`content/quizzes/${file}`, output)
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.json({ uid: result.data.uids.newQuiz })
+        res.json({ uid: newQuiz.uid })
     } catch (error) {
         console.log(error)
         throw error
@@ -104,6 +115,7 @@ const getQuizzQuery = (uid) => {
     {
         quiz(func: uid(${uid})) {
             uid
+            date
             question {
                 uid
             }
@@ -115,6 +127,19 @@ const getQuizzQuery = (uid) => {
             }
         }
     }`
+}
+
+async function deleteFile(quiz) {
+    console.log(`deletefile`)
+    const file = fileNameFromQuiz(quiz)
+    console.log(file)
+
+    try {
+        await fs.remove(`content/quizzes/${file}`)
+        console.log('success!')
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 const deleteQuizzes = async (req, res) => {
@@ -171,14 +196,17 @@ const deleteQuizzes = async (req, res) => {
             ...tags
         ]
 
-        console.log(JSON.stringify(deleteJson, null, 4))
-
         const result = await txn.mutate({
             deleteJson: deleteJson,
             commitNow: true
         })
+
+        await deleteFile(quiz)
+
         return quiz.uid
     }))
+
+
 
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')

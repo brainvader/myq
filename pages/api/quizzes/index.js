@@ -1,6 +1,8 @@
 import nextConnect from 'next-connect';
 import middleware from '../../../middleware/database';
 
+import { numOfTaggedQuizzes } from '../../../logics/transactions'
+
 const handler = nextConnect();
 
 handler.use(middleware);
@@ -113,8 +115,12 @@ const getQuizzQuery = (uid) => {
 const deleteQuizzes = async (req, res) => {
     const uids = req.body.uids
 
+    const client = req.dbClient
+    const txn = client.newTxn()
+
+    // Get all quizzes with given uids
     const quizzes = await Promise.all(uids.map(async (uid) => {
-        const result = await req.dbClient.newTxn().query(getQuizzQuery(uid))
+        const result = await txn.query(getQuizzQuery(uid))
         const [quiz] = result.data.quiz
         return quiz
     }))
@@ -122,27 +128,49 @@ const deleteQuizzes = async (req, res) => {
     const deleted = await Promise.all(quizzes.map(async (quiz) => {
         const uid = quiz.uid
 
-        // TODO: Data
-        const [question] = quiz.question === undefined ? [null] : quiz.question
-        const [answer] = quiz.answer === undefined ? [null] : quiz.answer
-        const [tags] = quiz.tags === undefined ? [null] : quiz.tags
+        const question = (quiz.question || []).map(q => ({
+            uid: q.uid,
+            order: null,
+            type: null,
+            content: null
 
-        const questionField = question ? { question: { uid: question.uid } } : {}
-        const answerField = answer ? { answer: { uid: answer.uid } } : {}
-        const tagsField = tags ? { tags: { uid: tags.uid } } : {}
+        }))
 
-        const client = req.dbClient
-        const txn = client.newTxn()
-        const deleteJson = {
-            uid: uid,
-            title: null,
-            ...questionField,
-            ...answerField
-        }
+        const answer = (quiz.answer || []).map(a => ({
+            uid: a.uid,
+            order: null,
+            type: null,
+            content: null
+        }))
+
+        const tags = await Promise.all((quiz.tags || []).map(async (t) => {
+            const count = await numOfTaggedQuizzes(txn, t)
+            const isDelete = (count - 1) === 0 ? true : false
+            console.log(`tag is ${isDelete ? "delete" : 'detach'}`)
+
+            return isDelete
+                ? { uid: t.uid, tag_name: null }
+                : { uid: t.uid }
+        }))
+
+        const deleteJson = [
+            {
+                uid: uid,
+                title: null,
+                date: null,
+                user: null,
+                version: null,
+            },
+            ...question,
+            ...answer,
+            ...tags
+        ]
+
+        console.log(JSON.stringify(deleteJson, null, 4))
 
         const result = await txn.mutate({
             deleteJson: deleteJson,
-            commitNow: true,
+            commitNow: true
         })
         return quiz.uid
     }))

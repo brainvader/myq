@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "dgraph": "docker run --name myq -v myq:/dgraph --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000  dgraph/standalone:v20.03.0"
+    "dgraph": "docker run --name myq -v myq:/dgraph --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000  dgraph/standalone:v20.03.0",
+    "redoc": "redoc-cli bundle ./openapi/myq-v1.yml --output ./docs/index.html"
   },
   "dependencies": {
     "dgraph-js-http": "^20.7.1",

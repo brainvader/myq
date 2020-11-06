@@ -117,8 +117,6 @@ const getQuizzQuery = (uid) => {
     }`
 }
 
-
-// TODO: Update delete logic
 const deleteQuizzes = async (req, res) => {
     const uids = req.body.uids
 

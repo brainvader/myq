@@ -18,8 +18,11 @@ const updateTitle = async (uid, title) => {
 }
 
 export default function TitleInput({ quiz }) {
+    const [title, setTitle] = useState(quiz.title)
+
     const inputHandler = (event, data) => {
         const newTitle = data.value
+        setTitle(newTitle)
         mutate(`/api/quizzes/${quiz.uid}`, async current => {
             const currentTitle = quiz.title
             const newQuiz = { ...current, title: newTitle }
@@ -29,7 +32,7 @@ export default function TitleInput({ quiz }) {
 
     const keyboardHandler = async (event) => {
         if (event.key === 'Enter') {
-            const res = await updateTitle(quiz.uid, quiz.title)
+            const res = await updateTitle(quiz.uid, title)
             if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
         }
     }
@@ -39,7 +42,7 @@ export default function TitleInput({ quiz }) {
             style={style}
             icon="question"
             placeholder='Title'
-            value={quiz.title}
+            value={title}
             onKeyUp={keyboardHandler}
             onChange={inputHandler} />
     )

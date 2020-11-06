@@ -1,7 +1,9 @@
-import * as fs from 'fs-extra';
+import * as fs from 'fs-extra'
 
 import nextConnect from 'next-connect';
 import middleware from '../../../../middleware/database';
+
+import { fileNameFromQuiz } from '../../../../lib/utils'
 
 const handler = nextConnect();
 
@@ -42,6 +44,17 @@ const getQuiz = async (req, res) => {
     res.json(quiz)
 }
 
+// TODO: fs can't module not found error
+async function saveFile(quiz) {
+    const file = fileNameFromQuiz(quiz)
+    const output = JSON.stringify(quiz, null, 4)
+    try {
+        await fs.outputFile(`content/quizzes/${file}`, output)
+    } catch (error) {
+        throw error
+    }
+}
+
 const saveQuiz = async (req, res) => {
     const { quiz } = req.body
     const txn = req.dbClient.newTxn();
@@ -50,12 +63,7 @@ const saveQuiz = async (req, res) => {
         const result = await txn.mutate({ setJson: quiz })
         await txn.commit();
 
-        const [yyyymmdd, _] = quiz.date.split(`T`)
-        const file = yyyymmdd.split('-').join('/').concat(`/${quiz.uid}.json`)
-        console.log(`file  ${file}`)
-
-        const output = JSON.stringify(quiz, null, 4)
-        await fs.outputFile(`content/quizzes/${file}`, output)
+        await saveFile(quiz)
 
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -66,6 +74,8 @@ const saveQuiz = async (req, res) => {
         await txn.discard();
     }
 }
+
+// TODO: Delete a quiz with its uid
 
 handler.get(getQuiz)
 handler.put(saveQuiz)

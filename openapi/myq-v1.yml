@@ -1,0 +1,100 @@
+openapi: 3.0.0
+
+info:
+  title: MyQ API
+  description: >
+    # Overview
+
+    MyQ API documentation
+  version: 0.1.0
+
+servers:
+  - url: "{protocol}://localhost:{port}/api"
+    description: Next.js integrated api server
+    variables:
+      protocol:
+        default: http
+      port:
+        default: "3000"
+
+paths:
+  /quizzes:
+    get:
+      summary: Quizzes List
+      description: Get only the quizzes that can be displayed in a single page
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          required: true
+          description: page number
+      responses:
+        "200":
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalQuizzes:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int64
+                  quizzes:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Quiz"
+
+components:
+  schemas:
+    Quiz:
+      type: object
+      properties:
+        uid:
+          type: integer
+          format: int64
+        titile:
+          type: string
+        date:
+          type: string
+          format: date
+        user:
+          type: string
+        version:
+          type: string
+        question:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
+        answer:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tags"
+    Tags:
+      type: object
+      properties:
+        uid:
+          type: integer
+          format: int64
+        tag_name:
+          type: string
+    Cell:
+      type: object
+      properties:
+        uid:
+          type: integer
+          format: int64
+        order:
+          type: integer
+          format: int64
+        type:
+          type: string
+        content:
+          type: string

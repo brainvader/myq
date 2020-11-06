@@ -91,9 +91,17 @@ const addQuiz = async (req, res) => {
     try {
         const result = await txn.mutate({ setJson: quiz })
         await txn.commit();
+        const uid = result.data.uids.newQuiz
+        const newQuiz = {
+            ...quiz,
+            uid: uid
+        }
+        const file = fileNameFromQuiz(newQuiz)
+        const output = JSON.stringify(newQuiz, null, 4)
+        await fs.outputFile(`content/quizzes/${file}`, output)
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.json({ uid: result.data.uids.newQuiz })
+        res.json({ uid: newQuiz.uid })
     } catch (error) {
         console.log(error)
         throw error

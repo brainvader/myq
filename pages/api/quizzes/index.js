@@ -85,11 +85,18 @@ const addQuiz = async (req, res) => {
         "tags": []
     }
 
-    const result = await txn.mutate({ setJson: quiz, commitNow: true })
-
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.json({ uid: result.data.uids.newQuiz })
+    try {
+        const result = await txn.mutate({ setJson: quiz })
+        await txn.commit();
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.json({ uid: result.data.uids.newQuiz })
+    } catch (error) {
+        console.log(error)
+        throw error
+    } finally {
+        await txn.discard()
+    }
 }
 
 const getQuizzQuery = (uid) => {

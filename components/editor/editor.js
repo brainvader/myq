@@ -18,7 +18,6 @@ export default function Editor({ quiz }) {
 
     const autoSave = async () => {
         // update quiz
-        console.log(`auto save`)
         const res = await requestUpdateQuiz(quiz)
         if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
     }

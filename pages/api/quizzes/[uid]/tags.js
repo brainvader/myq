@@ -43,11 +43,6 @@ const addTag = async (req, res) => {
         const result = await txn.mutate({ setJson: quiz, commitNow: true });
         const tagged = result.data.uids
         res.json(tagged)
-
-    try {
-        const tagged = await txn.mutate({ setJson: quiz, commitNow: true });
-        const newTag = tagged.data.uids
-        res.json(newTag)
     } catch (error) {
         throw error
     } finally {
@@ -55,24 +50,41 @@ const addTag = async (req, res) => {
     }
 }
 
+const queryQuizzesFromTag = `
+query tag($uid: string) {
+    tag(func: uid($uid)) {
+        ~tags {
+            count(uid)
+        }
+    }
+}`
+
 const detachTag = async (req, res) => {
     const { uid } = req.query
     const { tag } = req.body
-
-    const deleteJson = {
-        uid: uid,
-        tags: [
-            {
-                uid: tag.uid,
-                tag_name: null
-            }
-        ]
-    }
 
     const client = req.dbClient
     const txn = client.newTxn()
 
     try {
+        // Check how many quizzes reference to a given tag
+        const vars = { $uid: tag.uid }
+        const quizzesFromTag = await txn.queryWithVars(queryQuizzesFromTag, vars)
+        const [{ [`~tags`]: [taggedQuiz] }] = quizzesFromTag.data.tag
+        const count = parseInt(taggedQuiz.count)
+
+        // Delete a given tag if there are no references
+        const isDelete = (count - 1) === 0 ? true : false
+
+        const deleteJson = {
+            uid: uid,
+            tags: [
+                isDelete
+                    ? { uid: tag.uid, tag_name: null }
+                    : { uid: tag.uid }
+            ]
+        }
+
         const untagged = await txn.mutate({ deleteJson: deleteJson, commitNow: true });
         res.json(untagged.data)
     } catch (error) {

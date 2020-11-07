@@ -21,6 +21,7 @@
     "swr": "^0.3.5"
   },
   "devDependencies": {
+    "cypress": "^5.5.0",
     "redoc-cli": "^0.9.13"
   }
 }

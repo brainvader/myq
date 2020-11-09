@@ -26,9 +26,26 @@ const newQuiz = {
     ]
 }
 
-describe('Home Page', () => {
-    it('should render home page', () => {
+
+describe('New Quiz', () => {
+    it.only('should create new quiz', () => {
         cy.server()
+        // Stub route
+        cy.route('POST', '/api/quizzes', newQuiz).as('addQuiz')
+        cy.route('GET', '/api/quizzes/0x70530', newQuiz)
+
+        // visit home page
         cy.visit("/quizzes")
+
+        // click button
+        cy.get('.create-quiz-btn').click()
+
+        // redirect occurred here
+
+        // control time explicitly
+        cy.clock()
+        // check url after redirection
+        cy.url().should('include', '/quizzes/0x70530')
+        cy.tick(1000)
     })
 })

@@ -11,6 +11,7 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
+    "axios": "^0.21.0",
     "dgraph-js-http": "^20.7.1",
     "fs-extra": "^9.0.1",
     "next": "^9.5.5",

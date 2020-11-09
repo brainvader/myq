@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { mutate } from 'swr'
+import axios from 'axios'
 
 import QuizList from '../../components/editor/quiz-list'
 import { PageProvider, usePage } from '../../components/editor/paginator'
@@ -15,13 +16,8 @@ const CreateQuizButton = () => {
     const { pageState, _ } = usePage()
 
     const createHandler = async () => {
-        const body = { createdAt: getTimeStamp() }
-        const res = await fetch('/api/quizzes', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
-        const newQuiz = await res.json()
+        const res = await axios.post('/api/quizzes', { createdAt: getTimeStamp() })
+        const newQuiz = await res.data
         mutate(`/api/quizzes?page=${pageState.activePage}`)
 
         router.push({

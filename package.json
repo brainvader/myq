@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "dgraph": "docker run --name myq -v myq:/dgraph --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000  dgraph/standalone:v20.03.0",
-    "redoc": "redoc-cli bundle ./openapi/myq-v1.yml --output ./docs/index.html"
+    "redoc": "redoc-cli bundle ./openapi/myq-v1.yml --output ./docs/index.html",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "dgraph-js-http": "^20.7.1",
@@ -21,6 +22,7 @@
     "swr": "^0.3.5"
   },
   "devDependencies": {
+    "cypress": "^5.5.0",
     "redoc-cli": "^0.9.13"
   }
 }

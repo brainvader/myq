@@ -25,7 +25,7 @@ const CreateQuizButton = () => {
             query: { uid: newQuiz.uid },
         })
     }
-    return <Button icon='plus' onClick={createHandler} />
+    return <Button className={"create-quiz-btn"} icon='plus' onClick={createHandler} />
 }
 
 const DeleteQuizButton = () => {

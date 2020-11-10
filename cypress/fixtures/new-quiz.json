@@ -1,0 +1,28 @@
+{
+    "uid": "0x70530",
+    "title": "新規クイズ",
+    "user": "brainvader",
+    "date": "2020-11-09T21:57:34Z",
+    "question": [
+        {
+            "uid": "0x70531",
+            "order": 0,
+            "type": "text",
+            "content": "我思う"
+        }
+    ],
+    "answer": [
+        {
+            "uid": "0x70532",
+            "order": 0,
+            "type": "text",
+            "content": "故に我あり"
+        }
+    ],
+    "tags": [
+        {
+            "uid": "0x70533",
+            "tag_name": "minq"
+        }
+    ]
+}

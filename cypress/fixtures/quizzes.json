@@ -1,0 +1,114 @@
+{
+    "totalQuizzes": 3,
+    "totalPages": 1,
+    "quizzes": [
+        {
+            "title": "MinQとは何でしょうか?",
+            "uid": "0x10",
+            "user": "brainvader",
+            "version": "0.0.1",
+            "date": "2020-10-08T18:01:00",
+            "question": [
+                {
+                    "uid": "0x101",
+                    "type": "text",
+                    "content": "MinQとは何でしょうか?",
+                    "order": 0
+                },
+                {
+                    "uid": "0x102",
+                    "type": "text",
+                    "content": "またどのようなものを目指しているでしょうか?",
+                    "order": 1
+                }
+            ],
+            "answer": [
+                {
+                    "uid": "0x201",
+                    "type": "text",
+                    "content": "MinQはクイズベースの独学支援システムです.",
+                    "order": 0
+                },
+                {
+                    "uid": "0x202",
+                    "type": "text",
+                    "content": "学習したい分野を小さなクイズに分割して少しずつ学ぶことができます.",
+                    "order": 1
+                },
+                {
+                    "uid": "0x203",
+                    "type": "text",
+                    "content": "最終的には最適化されたクイズの提供, 学習ペース管理, 適切なタイミングでの復習などユーザーの学習を総合的に支援します.",
+                    "order": 2
+                }
+            ],
+            "tags": [
+                {
+                    "uid": "0x301",
+                    "tag_name": "minq"
+                },
+                {
+                    "uid": "0x302",
+                    "tag_name": "tutorial"
+                }
+            ]
+        },
+        {
+            "title": "put on holdとは?",
+            "uid": "0x11",
+            "user": "brainvader",
+            "version": "0.0.1",
+            "date": "2020-10-08T18:01:01",
+            "question": [
+                {
+                    "uid": "0x103",
+                    "type": "text",
+                    "content": "put on holdとは?",
+                    "order": 0
+                }
+            ],
+            "answer": [
+                {
+                    "uid": "0x204",
+                    "type": "text",
+                    "content": "保留する",
+                    "order": 0
+                }
+            ],
+            "tags": [
+                {
+                    "uid": "0x303",
+                    "tag_name": "english"
+                }
+            ]
+        },
+        {
+            "title": "hotshotとは?",
+            "uid": "0x12",
+            "user": "brainvader",
+            "version": "0.0.1",
+            "date": "2020-10-08T18:01:01",
+            "question": [
+                {
+                    "uid": "0x104",
+                    "type": "text",
+                    "content": "hotshotとは?",
+                    "order": 0
+                }
+            ],
+            "answer": [
+                {
+                    "type": "0x205",
+                    "content": "有能な人、やり手, 凄腕",
+                    "order": 0
+                }
+            ],
+            "tags": [
+                {
+                    "uid": "0x303",
+                    "tag_name": "english"
+                }
+            ]
+        }
+    ]
+}

@@ -3,6 +3,6 @@ describe('Home Page', () => {
         cy.visit('/')
         // wait for redirect completed
         cy.wait(1000)
-        cy.location('pathname').should('eq', '/')
+        cy.location('pathname').should('eq', '/quizzes')
     });
 });

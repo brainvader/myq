@@ -23,7 +23,7 @@ export default function EditorMenu({ quiz }) {
     return (
         <div>
             <Button.Group>
-                <Button icon='home' onClick={homeHandler} />
+                <Button className={'home-btn'} icon='home' onClick={homeHandler} />
                 <Button icon='save' onClick={saveHandler} />
             </Button.Group>
             { '　'}

@@ -18,7 +18,7 @@ const CreateQuizButton = () => {
     const createHandler = async () => {
         const res = await axios.post('/api/quizzes', { createdAt: getTimeStamp() })
         const newQuiz = await res.data
-        mutate(`/api/quizzes?page=${pageState.activePage}`)
+        // mutate(`/api/quizzes?page=${pageState.activePage}`)
 
         router.push({
             pathname: '/quizzes/[uid]',

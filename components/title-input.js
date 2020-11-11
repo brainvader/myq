@@ -39,6 +39,7 @@ export default function TitleInput({ quiz }) {
 
     return (
         <Input
+            className={'title-input'}
             style={style}
             icon="question"
             placeholder='Title'

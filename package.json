@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "cypress": "^5.6.0",
+    "miragejs": "^0.1.41",
     "redoc-cli": "^0.9.13"
   }
 }

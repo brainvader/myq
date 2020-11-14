@@ -8,7 +8,8 @@
     "start": "next start",
     "dgraph": "docker run --name myq -v myq:/dgraph --rm -it -p 8080:8080 -p 9080:9080 -p 8000:8000  dgraph/standalone:v20.03.0",
     "redoc": "redoc-cli bundle ./openapi/myq-v1.yml --output ./docs/index.html",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "seed:db": "curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "cypress": "^5.6.0",
     "miragejs": "^0.1.41",
+    "msw": "^0.21.3",
     "redoc-cli": "^0.9.13"
   }
 }

@@ -35,6 +35,14 @@ export function makeServer({ environment = "development" } = {}) {
                 return new Response(200, { "Content-Type": "application/json" }, body)
 
             })
+
+            this.get('/quizzes/:uid', (schema, request) => {
+                const uid = request.params.uid
+                const quiz = schema.quizzes.findBy({ uid: uid })
+                return new Response(200, { "Content-Type": "application/json" }, quiz.attrs)
+            })
+
+            })
         },
     })
 

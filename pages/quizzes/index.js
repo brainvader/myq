@@ -34,17 +34,13 @@ const DeleteQuizButton = () => {
     const deleteCheckedHandler = async () => {
         // get checked quiz UIDs
         const uids = Array.from(pageState.checked)
-        const body = { uids: uids }
+        const data = { uids: uids }
         // delete all checked quizzes
-        const res = await fetch('/api/quizzes', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
+        const res = await axios.delete('/api/quizzes', { data: data })
 
         // reset checked quizzes
         pageActions.uncheckAll()
-        mutate(`/api/quizzes?page=${pageState.activePage}`)
+        if (res.ok) mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
 
     return <Button icon='trash' onClick={deleteCheckedHandler} />

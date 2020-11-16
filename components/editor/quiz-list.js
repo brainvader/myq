@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
+import axios from 'axios'
 
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
@@ -28,14 +28,10 @@ const RemoveButton = ({ quiz }) => {
 
     const removeHandler = async () => {
         const uids = [quiz.uid]
-        const body = { uids: uids }
-        const res = await fetch('/api/quizzes', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
-
-        mutate(`/api/quizzes?page=${pageState.activePage}`)
+        const data = { uids: uids }
+        // delete all checked quizzes
+        const res = await axios.delete('/api/quizzes', { data: data })
+        if (res.ok) mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
     return <Button icon='trash' onClick={removeHandler} />
 }

@@ -42,6 +42,12 @@ export function makeServer({ environment = "development" } = {}) {
                 return new Response(200, { "Content-Type": "application/json" }, quiz.attrs)
             })
 
+            this.put('/quizzes/:uid', (schema, request) => {
+                const uid = request.params.uid
+                const attrs = JSON.parse(request.requestBody)
+                const { quiz } = attrs
+                const [newQuiz] = schema.db.quizzes.update({ uid: uid }, quiz)
+                return new Response(200, { "Content-Type": "application/json" }, newQuiz)
             })
         },
     })

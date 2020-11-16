@@ -19,6 +19,10 @@ export function makeServer({ environment = "development" } = {}) {
         routes() {
             this.namespace = 'api'
 
+            this.passthrough((request) => {
+                if (request.url === "/_next/static/development/_devPagesManifest.json") return true;
+            })
+
             this.get('/quizzes', (schema, request) => {
                 const { page } = request.queryParams;
                 const quizzes = schema.quizzes.all()

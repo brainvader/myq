@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { mutate } from 'swr'
+import axios from 'axios'
 
 import { Button } from 'semantic-ui-react'
 
@@ -11,13 +12,15 @@ const cellMenu = {
     marginBottom: `1em`
 }
 
-const updateCell = async (cell) => {
+const updateCellType = async (cell) => {
     const body = { cell: cell }
-    const res = await fetch(`/api/cells/${cell.uid}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
+    // TODO: Update /api/cells/[cellUid]/type
+    const res = await axios.put(`/api/cells/${cell.uid}`, body)
+    // const res = await fetch(`/api/cells/${cell.uid}`, {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(body)
+    // })
 
     return res
 }
@@ -57,8 +60,8 @@ export default function CellMenu({ cell }) {
 
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }
-        const response = await updateCell(newCell)
-        if (response.ok) mutate(`/api/quizzes/${uid}`)
+        const res = await updateCellType(newCell)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const moveUp = async (event, data) => {

@@ -5,8 +5,8 @@ export const requestCreateQuiz = async (body) => {
     return res
 }
 
-export const requestUpdateQuiz = async (quiz, body) => {
-    const res = await axios.put(`/api/quizzes/${quiz.uid}`, body)
+export const requestUpdateQuiz = async (uid, body) => {
+    const res = await axios.put(`/api/quizzes/${uid}`, body)
     // const res = await fetch(`/api/quizzes/${quiz.uid}`, {
     //     method: 'PUT',
     //     headers: { 'Content-Type': 'application/json' },
@@ -20,8 +20,8 @@ export const requestDeleteQuizzes = async (body) => {
     return res
 }
 
-export const requestDeleteCell = async (cell, body) => {
-    const res = await axios.delete(`/api/cells/${cell.uid}`, { data: body })
+export const requestDeleteCell = async (uid, body) => {
+    const res = await axios.delete(`/api/cells/${uid}`, { data: body })
     // const res = await fetch(`/api/cells/${cell.uid}`, {
     //     method: 'DELETE',
     //     headers: { 'Content-Type': 'application/json' },
@@ -30,9 +30,9 @@ export const requestDeleteCell = async (cell, body) => {
     return res
 }
 
-export const requestUpdateCellType = async (cell, body) => {
+export const requestUpdateCellType = async (uid, body) => {
     // TODO: Update /api/cells/[cellUid]/type
-    const res = await axios.put(`/api/cells/${cell.uid}`, body)
+    const res = await axios.put(`/api/cells/${uid}`, body)
     // const res = await fetch(`/api/cells/${cell.uid}`, {
     //     method: 'PUT',
     //     headers: { 'Content-Type': 'application/json' },

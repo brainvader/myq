@@ -12,7 +12,7 @@ export default function EditorMenu({ quiz }) {
     // save the current state of quiz
     const saveHandler = async () => {
         const body = { quiz: quiz }
-        const res = await requestUpdateQuiz(quiz, body)
+        const res = await requestUpdateQuiz(quiz.uid, body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${quiz.uid}`)
     }
 

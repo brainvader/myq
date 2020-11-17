@@ -36,13 +36,15 @@ const swapCells = async (req, res) => {
         // find the cell to move over
         .filter(cell => cell.order === newOrder)
         // Update the cell order
-        .map(cell => ({ ...cell, order: original.order }))
-    // move in the new order
+        .map(cell => ({ uid: cell.uid, order: original.order }))
+    // update original cell with new order
     const moved = { uid: original.uid, order: newOrder }
 
     const swappedCells = [movedOver, moved]
-    const cellSwapped = await txn.mutate({ setJson: swappedCells, commitNow: true });
+    await txn.mutate({ setJson: swappedCells, commitNow: true });
 
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'application/json')
     res.json({ swapped: [moved.uid, movedOver.uid] })
 }
 

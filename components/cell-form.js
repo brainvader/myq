@@ -53,7 +53,7 @@ const Cell = ({ cell }) => {
     )
 }
 
-const Cells = ({ cells }) => cells.map((cell, i) => <Cell key={i} cell={cell} />)
+const Cells = ({ cells }) => cells.map((cell, i) => <Cell key={cell.uid} cell={cell} />)
 
 export default function CellForm({ cells }) {
     const { formType } = useContext(CellFormContext)

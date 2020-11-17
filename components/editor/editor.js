@@ -11,7 +11,7 @@ import CellForm from '../cell-form'
 
 import CellFormContext from '../../components/cell-form/context'
 
-import { requestUpdateQuiz } from '../../logics/api'
+import { OK, requestUpdateQuiz } from '../../logics/api'
 
 export default function Editor({ quiz }) {
     const router = useRouter()
@@ -19,7 +19,7 @@ export default function Editor({ quiz }) {
     const autoSave = async () => {
         const body = { quiz: quiz }
         const res = await requestUpdateQuiz(quiz.uid, body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${quiz.uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const saveBeforeLeavingPage = (event) => {

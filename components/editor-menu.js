@@ -1,10 +1,9 @@
-import { useContext } from 'react'
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
 
 import { Button } from 'semantic-ui-react'
 
-import { requestUpdateQuiz } from '../logics/api'
+import { requestUpdateQuiz, OK } from '../logics/api'
 
 export default function EditorMenu({ quiz }) {
     const router = useRouter()
@@ -13,7 +12,7 @@ export default function EditorMenu({ quiz }) {
     const saveHandler = async () => {
         const body = { quiz: quiz }
         const res = await requestUpdateQuiz(quiz.uid, body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${quiz.uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     // go back to the quiz list page

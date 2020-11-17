@@ -50,3 +50,5 @@ export const requestSwapCells = async (body) => {
     // })
     return res
 }
+
+export const OK = (response) => response.statusText === 'OK'

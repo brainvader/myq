@@ -9,7 +9,7 @@ import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search } from 'semantic-ui-react'
 
 import { getTimeStamp } from '../../lib/utils'
-import { requestCreateQuiz, requestDeleteQuizzes } from '../../logics/api'
+import { requestCreateQuiz, requestDeleteQuizzes, OK } from '../../logics/api'
 
 const CreateQuizButton = () => {
     const router = useRouter()
@@ -17,7 +17,7 @@ const CreateQuizButton = () => {
     const createHandler = async () => {
         const body = { createdAt: getTimeStamp() }
         const res = await requestCreateQuiz(body)
-        if (res.statusText === 'OK') {
+        if (OK(res)) {
             const newQuiz = await res.data
 
             router.push({
@@ -42,7 +42,7 @@ const DeleteQuizButton = () => {
 
         // reset checked quizzes
         pageActions.uncheckAll()
-        if (res.statusText === 'OK') mutate(`/api/quizzes?page=${pageState.activePage}`)
+        if (OK(res)) mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
 
     return <Button icon='trash' onClick={deleteCheckedHandler} />

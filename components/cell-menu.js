@@ -7,48 +7,11 @@ import { Button } from 'semantic-ui-react'
 import EditorContext from '../components/editor/context'
 import CellFormContext from '../components/cell-form/context'
 
+import { requestDeleteCell, requestSwapCells, requestUpdateCellType } from '../logics/api'
+
 const cellMenu = {
     marginTop: `0.5em`,
     marginBottom: `1em`
-}
-
-const requestDeleteCell = async (cell, body) => {
-    const res = await axios.delete(`/api/cells/${cell.uid}`, { data: body })
-
-    // const res = await fetch(`/api/cells/${cell.uid}`, {
-    //     method: 'DELETE',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(body)
-    // })
-    return res
-}
-
-const updateCellType = async (cell) => {
-    const body = { cell: cell }
-    // TODO: Update /api/cells/[cellUid]/type
-    const res = await axios.put(`/api/cells/${cell.uid}`, body)
-    // const res = await fetch(`/api/cells/${cell.uid}`, {
-    //     method: 'PUT',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(body)
-    // })
-
-    return res
-}
-
-const swapCells = async (cell, newOrder, edgeName) => {
-    const body = {
-        original: cell,
-        newOrder: newOrder,
-        edgeName: edgeName
-    }
-    const res = await axios.put(`/api/cells/orders`, body)
-    // const res = await fetch(`/api/cells/orders`, {
-    //     method: 'PUT',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(body)
-    // })
-    return res
 }
 
 export default function CellMenu({ cell }) {
@@ -66,19 +29,30 @@ export default function CellMenu({ cell }) {
 
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }
-        const res = await updateCellType(newCell)
+        const body = { cell: newCell }
+        const res = await requestUpdateCellType(newCell, body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const moveUp = async (event, data) => {
         const newOrder = data.order - 1
-        const res = await swapCells(data, newOrder, formType)
+        const body = {
+            original: cell,
+            newOrder: newOrder,
+            edgeName: formType
+        }
+        const res = await requestSwapCells(body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const moveDown = async (event, data) => {
         const newOrder = data.order + 1
-        const res = await swapCells(data, newOrder, formType)
+        const body = {
+            original: cell,
+            newOrder: newOrder,
+            edgeName: formType
+        }
+        const res = await requestSwapCells(body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 

@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router'
 
 import { mutate } from 'swr'
-import axios from 'axios'
 
 import QuizList from '../../components/editor/quiz-list'
 import { PageProvider, usePage } from '../../components/editor/paginator'
@@ -10,21 +9,23 @@ import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search } from 'semantic-ui-react'
 
 import { getTimeStamp } from '../../lib/utils'
-import { requestDeleteQuizzes } from '../../logics/api'
+import { requestCreateQuiz, requestDeleteQuizzes } from '../../logics/api'
 
 const CreateQuizButton = () => {
     const router = useRouter()
-    const { pageState, _ } = usePage()
 
     const createHandler = async () => {
-        const res = await axios.post('/api/quizzes', { createdAt: getTimeStamp() })
-        const newQuiz = await res.data
-        // mutate(`/api/quizzes?page=${pageState.activePage}`)
+        const body = { createdAt: getTimeStamp() }
+        const res = await requestCreateQuiz(body)
+        if (res.statusText === 'OK') {
+            const newQuiz = await res.data
 
-        router.push({
-            pathname: '/quizzes/[uid]',
-            query: { uid: newQuiz.uid },
-        })
+            router.push({
+                pathname: '/quizzes/[uid]',
+                query: { uid: newQuiz.uid },
+            })
+        }
+
     }
     return <Button className={"create-quiz-btn"} icon='plus' onClick={createHandler} />
 }

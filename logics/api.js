@@ -1,5 +1,10 @@
 import axios from 'axios'
 
+export const requestCreateQuiz = async (body) => {
+    const res = await axios.post('/api/quizzes', body)
+    return res
+}
+
 export const requestUpdateQuiz = async (quiz) => {
     const body = { quiz: quiz }
     const res = await fetch(`/api/quizzes/${quiz.uid}`, {

@@ -17,9 +17,9 @@ export default function Editor({ quiz }) {
     const router = useRouter()
 
     const autoSave = async () => {
-        // update quiz
-        const res = await requestUpdateQuiz(quiz)
-        if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
+        const body = { quiz: quiz }
+        const res = await requestUpdateQuiz(quiz, body)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const saveBeforeLeavingPage = (event) => {

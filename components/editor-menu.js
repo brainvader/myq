@@ -11,8 +11,9 @@ export default function EditorMenu({ quiz }) {
 
     // save the current state of quiz
     const saveHandler = async () => {
-        const res = await requestUpdateQuiz(quiz)
-        if (res.ok) mutate(`/api/quizzes/${quiz.uid}`)
+        const body = { quiz: quiz }
+        const res = await requestUpdateQuiz(quiz, body)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     // go back to the quiz list page

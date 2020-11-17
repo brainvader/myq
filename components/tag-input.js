@@ -1,29 +1,15 @@
 import { useState } from 'react'
-import useSWR, { mutate } from 'swr'
+import { mutate } from 'swr'
 
 import { Search, Label, List } from 'semantic-ui-react'
+
+import { useTags } from '../lib/hooks'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
         const newQuiz = { ...current, tags: [...tags] }
         return newQuiz
     }, false)
-}
-
-const tagsFetcher = async (url, searchTerm) => {
-    const path = searchTerm ? `${url}?search=${searchTerm}` : url
-    const res = await fetch(path)
-    return res.json()
-}
-
-const useTags = (url, searchTerm) => {
-    const { data, _, error } = useSWR([url, searchTerm], tagsFetcher)
-
-    return {
-        tags: data || [],
-        isLoading: !error && !data,
-        isError: error
-    }
 }
 
 const attachTag = async (uid, tag) => {
@@ -50,7 +36,7 @@ const detachTag = async (uid, tag) => {
 export default function TagInput({ quiz }) {
     const [searchTerm, setSearchTerm] = useState("")
     // get all tags defined
-    const { tags, isLoading, isError } = useTags(`/api/tags`, searchTerm)
+    const { tags, isLoading, isError } = useTags(searchTerm)
 
     if (isError) return <div>failed to load</div>
 

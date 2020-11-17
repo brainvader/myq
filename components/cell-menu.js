@@ -23,14 +23,14 @@ export default function CellMenu({ cell }) {
             quizUid: uid,
             edgeName: formType
         }
-        const res = await requestDeleteCell(cell, body)
+        const res = await requestDeleteCell(cell.uid, body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }
         const body = { cell: newCell }
-        const res = await requestUpdateCellType(newCell, body)
+        const res = await requestUpdateCellType(newCell.uid, body)
         if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 

@@ -51,4 +51,9 @@ export const requestSwapCells = async (body) => {
     return res
 }
 
+export const requestUpdateTitle = async (uid, body) => {
+    const res = await axios.put(`/api/quizzes/${uid}/title`, body)
+    return res
+}
+
 export const OK = (response) => response.statusText === 'OK'

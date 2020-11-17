@@ -28,11 +28,12 @@ const swapCells = async (cell, newOrder, edgeName) => {
         newOrder: newOrder,
         edgeName: edgeName
     }
-    const res = await fetch(`/api/cells/orders`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
+    const res = await axios.put(`/api/cells/orders`, body)
+    // const res = await fetch(`/api/cells/orders`, {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(body)
+    // })
     return res
 }
 
@@ -63,13 +64,13 @@ export default function CellMenu({ cell }) {
     const moveUp = async (event, data) => {
         const newOrder = data.order - 1
         const res = await swapCells(data, newOrder, formType)
-        if (res.ok) mutate(`/api/quizzes/${uid}`)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const moveDown = async (event, data) => {
         const newOrder = data.order + 1
         const res = await swapCells(data, newOrder, formType)
-        if (res.ok) mutate(`/api/quizzes/${uid}`)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     return (

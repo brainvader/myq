@@ -7,7 +7,7 @@ import { Button, Pagination } from 'semantic-ui-react'
 import { useQuizzes } from '../../lib/hooks'
 import { usePage } from '../../components/editor/paginator'
 
-import { requestDeleteQuizzes } from '../../logics/api'
+import { OK, requestDeleteQuizzes } from '../../logics/api'
 
 const EditButton = ({ quiz }) => {
     const router = useRouter()
@@ -33,7 +33,7 @@ const RemoveButton = ({ quiz }) => {
         // delete all checked quizzes
         const res = await requestDeleteQuizzes(body)
         // const res = await axios.delete('/api/quizzes', { data: data })
-        if (res.statusText === 'OK') mutate(`/api/quizzes?page=${pageState.activePage}`)
+        if (OK(res)) mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
     return <Button icon='trash' onClick={removeHandler} />
 }

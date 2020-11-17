@@ -1,13 +1,12 @@
 import { useContext } from 'react'
 import { mutate } from 'swr'
-import axios from 'axios'
 
 import { Button } from 'semantic-ui-react'
 
 import EditorContext from '../components/editor/context'
 import CellFormContext from '../components/cell-form/context'
 
-import { requestDeleteCell, requestSwapCells, requestUpdateCellType } from '../logics/api'
+import { requestDeleteCell, requestSwapCells, requestUpdateCellType, OK } from '../logics/api'
 
 const cellMenu = {
     marginTop: `0.5em`,
@@ -24,14 +23,14 @@ export default function CellMenu({ cell }) {
             edgeName: formType
         }
         const res = await requestDeleteCell(cell.uid, body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${uid}`)
     }
 
     const setType = async (event, data) => {
         const newCell = { ...cell, type: data }
         const body = { cell: newCell }
         const res = await requestUpdateCellType(newCell.uid, body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${uid}`)
     }
 
     const moveUp = async (event, data) => {
@@ -42,7 +41,7 @@ export default function CellMenu({ cell }) {
             edgeName: formType
         }
         const res = await requestSwapCells(body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${uid}`)
     }
 
     const moveDown = async (event, data) => {
@@ -53,7 +52,7 @@ export default function CellMenu({ cell }) {
             edgeName: formType
         }
         const res = await requestSwapCells(body)
-        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${uid}`)
     }
 
     return (

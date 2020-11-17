@@ -10,6 +10,7 @@ import { Grid, Header } from 'semantic-ui-react'
 import { Button, Search } from 'semantic-ui-react'
 
 import { getTimeStamp } from '../../lib/utils'
+import { requestDeleteQuizzes } from '../../logics/api'
 
 const CreateQuizButton = () => {
     const router = useRouter()
@@ -34,13 +35,13 @@ const DeleteQuizButton = () => {
     const deleteCheckedHandler = async () => {
         // get checked quiz UIDs
         const uids = Array.from(pageState.checked)
-        const data = { uids: uids }
+        const body = { uids: uids }
         // delete all checked quizzes
-        const res = await axios.delete('/api/quizzes', { data: data })
+        const res = await requestDeleteQuizzes(body)
 
         // reset checked quizzes
         pageActions.uncheckAll()
-        if (res.ok) mutate(`/api/quizzes?page=${pageState.activePage}`)
+        if (res.statusText === 'OK') mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
 
     return <Button icon='trash' onClick={deleteCheckedHandler} />

@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router'
 import { mutate } from 'swr'
-import axios from 'axios'
 
 import { Checkbox, Table } from 'semantic-ui-react'
 import { Button, Pagination } from 'semantic-ui-react'
 
 import { useQuizzes } from '../../lib/hooks'
 import { usePage } from '../../components/editor/paginator'
+
+import { requestDeleteQuizzes } from '../../logics/api'
 
 const EditButton = ({ quiz }) => {
     const router = useRouter()
@@ -28,10 +29,11 @@ const RemoveButton = ({ quiz }) => {
 
     const removeHandler = async () => {
         const uids = [quiz.uid]
-        const data = { uids: uids }
+        const body = { uids: uids }
         // delete all checked quizzes
-        const res = await axios.delete('/api/quizzes', { data: data })
-        if (res.ok) mutate(`/api/quizzes?page=${pageState.activePage}`)
+        const res = await requestDeleteQuizzes(body)
+        // const res = await axios.delete('/api/quizzes', { data: data })
+        if (res.statusText === 'OK') mutate(`/api/quizzes?page=${pageState.activePage}`)
     }
     return <Button icon='trash' onClick={removeHandler} />
 }

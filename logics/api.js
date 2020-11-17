@@ -10,6 +10,11 @@ export const requestUpdateQuiz = async (quiz) => {
     return res
 }
 
+export const requestDeleteQuizzes = async (body) => {
+    const res = await axios.delete('/api/quizzes', { data: body })
+    return res
+}
+
 export const requestDeleteCell = async (cell, body) => {
     const res = await axios.delete(`/api/cells/${cell.uid}`, { data: body })
     // const res = await fetch(`/api/cells/${cell.uid}`, {

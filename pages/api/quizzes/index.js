@@ -130,13 +130,11 @@ const getQuizzQuery = (uid) => {
 }
 
 async function deleteFile(quiz) {
-    console.log(`deletefile`)
     const file = fileNameFromQuiz(quiz)
-    console.log(file)
 
     try {
         await fs.remove(`content/quizzes/${file}`)
-        console.log('success!')
+        console.log('success!', file)
     } catch (err) {
         console.log(err)
     }
@@ -173,86 +171,93 @@ const deleteQuizzes = async (req, res) => {
     const client = req.dbClient
     const txn = client.newTxn()
 
-    // get quizzes to delete
-    const deleteQuizzes = await getDeleteQuizzes(txn, uids)
+    try {
+        // get quizzes to delete
+        const deleteQuizzes = await getDeleteQuizzes(txn, uids)
 
-    // keep what tags are attached to quizzes prior to detaching
-    const attachedTagUids = new Set()
+        // keep what tags are attached to quizzes prior to detaching
+        const attachedTagUids = new Set()
 
-    // see https://dev.to/jamesliudotcc/how-to-use-async-await-with-map-and-promise-all-1gb5
-    const deleted = await Promise.all(
-        deleteQuizzes.map(async (quiz) => {
-            const uid = quiz.uid
+        // see https://dev.to/jamesliudotcc/how-to-use-async-await-with-map-and-promise-all-1gb5
+        const deleted = await Promise.all(
+            deleteQuizzes.map(async (quiz) => {
+                const uid = quiz.uid
 
-            const question = (quiz.question || []).map(q => ({
-                uid: q.uid,
-                order: null,
-                type: null,
-                content: null
+                const question = (quiz.question || []).map(q => ({
+                    uid: q.uid,
+                    order: null,
+                    type: null,
+                    content: null
 
-            }))
+                }))
 
-            const answer = (quiz.answer || []).map(a => ({
-                uid: a.uid,
-                order: null,
-                type: null,
-                content: null
-            }))
+                const answer = (quiz.answer || []).map(a => ({
+                    uid: a.uid,
+                    order: null,
+                    type: null,
+                    content: null
+                }))
 
-            const tags = (quiz.tags || []).map(tag => {
-                attachedTagUids.add(tag.uid)
-                console.log(attachedTagUids)
-                return { uid: tag.uid }
+                const tags = (quiz.tags || []).map(tag => {
+                    attachedTagUids.add(tag.uid)
+                    console.log(attachedTagUids)
+                    return { uid: tag.uid }
+                })
+
+                const deleteJson = [
+                    {
+                        uid: uid,
+                        title: null,
+                        date: null,
+                        user: null,
+                        version: null,
+                        question: question,
+                        answer: answer,
+                        tags: tags
+                    },
+
+                ]
+
+                await txn.mutate({ deleteJson: deleteJson })
+
+                // delete file
+                await deleteFile(quiz)
+                return quiz.uid
             })
+        )
 
-            const deleteJson = [
-                {
+        // clean up all tags that are referenced from any quizzes
+        const deleteTags = await Promise.all((Array.from(attachedTagUids) || [])
+            .filter(async (uid) => {
+                // count how many quizzes reference the tag
+                const count = await numOfTaggedQuizzes(txn, uid)
+
+                // count === 0: delete
+                // count > 0  : keep
+                const isDelete = count === 0 ? true : false
+                return isDelete
+            })
+            .map(async (uid) => {
+                return {
                     uid: uid,
-                    title: null,
-                    date: null,
-                    user: null,
-                    version: null,
-                    question: question,
-                    answer: answer,
-                    tags: tags
-                },
+                    tag_name: null
+                }
+            })
+        )
 
-            ]
+        await txn.mutate({ deleteJson: deleteTags })
 
-            await txn.mutate({ deleteJson: deleteJson })
+        await txn.commit()
 
-            // delete file
-            await deleteFile(quiz)
-            return quiz.uid
-        })
-    )
-
-    // clean up all tags that are referenced from any quizzes
-    const deleteTags = await Promise.all((Array.from(attachedTagUids) || [])
-        .filter(async (uid) => {
-            // count how many quizzes reference the tag
-            const count = await numOfTaggedQuizzes(txn, uid)
-
-            // count === 0: delete
-            // count > 0  : keep
-            const isDelete = count === 0 ? true : false
-            return isDelete
-        })
-        .map(async (uid) => {
-            return {
-                uid: uid,
-                tag_name: null
-            }
-        })
-    )
-
-    await txn.mutate({ deleteJson: deleteTags })
-
-    await txn.commit()
-
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json')
-    res.json({ deleted: deleted })
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'application/json')
+        res.json({ deleted: deleted })
+    } catch (error) {
+        console.log(error)
+        throw error
+    } finally {
+        await txn.discard()
+    }
 }
 
 handler.get(getQuizzes)

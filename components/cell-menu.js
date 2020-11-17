@@ -12,6 +12,17 @@ const cellMenu = {
     marginBottom: `1em`
 }
 
+const requestDeleteCell = async (cell, body) => {
+    const res = await axios.delete(`/api/cells/${cell.uid}`, { data: body })
+
+    // const res = await fetch(`/api/cells/${cell.uid}`, {
+    //     method: 'DELETE',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(body)
+    // })
+    return res
+}
+
 const updateCellType = async (cell) => {
     const body = { cell: cell }
     // TODO: Update /api/cells/[cellUid]/type
@@ -49,13 +60,8 @@ export default function CellMenu({ cell }) {
             quizUid: uid,
             edgeName: formType
         }
-        const res = await fetch(`/api/cells/${cell.uid}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-        })
-
-        if (res.ok) mutate(`/api/quizzes/${uid}`)
+        const res = await requestDeleteCell(cell, body)
+        if (res.statusText === 'OK') mutate(`/api/quizzes/${uid}`)
     }
 
     const setType = async (event, data) => {

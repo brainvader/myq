@@ -27,8 +27,8 @@ const detachTag = async (uid, tag) => {
 
 export default function TagInput({ quiz }) {
     const [searchTerm, setSearchTerm] = useState("")
-    // get all tags defined
-    const { tags, isLoading, isError } = useTags(searchTerm)
+    // get found tags as a result of search
+    const { candidates, isLoading, isError } = useTags(searchTerm)
 
     if (isError) return <div>failed to load</div>
 
@@ -50,7 +50,7 @@ export default function TagInput({ quiz }) {
 
         if (noTag) {
             // need to retrieve uid from tag name
-            const selectedTag = tags.find(tag => tag.tag_name === selectedTagName)
+            const selectedTag = candidates.find(tag => tag.tag_name === selectedTagName)
             const res = await attachTag(quiz.uid, selectedTag)
             if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
             setSearchTerm('')
@@ -71,7 +71,7 @@ export default function TagInput({ quiz }) {
         if (searchTerm === '') return
         if (event.key === 'Enter') {
             // check if there is inputting tag in database
-            const isTag = tags.length === 0 ? false : true
+            const isTag = candidates.length === 0 ? false : true
             // create a new tag node only when there are no one in database
             if (!isTag) {
                 const newTag = {
@@ -105,7 +105,7 @@ export default function TagInput({ quiz }) {
             <div>
                 <Search
                     loading={isLoading}
-                    results={tags.map(tag => ({ title: tag.tag_name }))}
+                    results={candidates.map(tag => ({ title: tag.tag_name }))}
                     value={searchTerm}
                     onKeyUp={keyboardHandler}
                     onSearchChange={inputHandler}

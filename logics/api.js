@@ -20,6 +20,20 @@ export const requestDeleteQuizzes = async (body) => {
     return res
 }
 
+// TODO: unify api path like
+// /api/quizzes/[uid]/cells
+// and give cell uid as body
+export const requestCreateCell = async (uid, body) => {
+    const res = await axios.put(`/api/quizzes/${uid}/cells`, body)
+    // const res = await fetch(`/api/quizzes/${uid}/cells`, {
+    //     method: 'PUT',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(body)
+    // })
+    return res
+}
+
+
 export const requestDeleteCell = async (uid, body) => {
     const res = await axios.delete(`/api/cells/${uid}`, { data: body })
     // const res = await fetch(`/api/cells/${cell.uid}`, {
@@ -30,8 +44,8 @@ export const requestDeleteCell = async (uid, body) => {
     return res
 }
 
+// TODO: rename requestUpdateCell
 export const requestUpdateCellType = async (uid, body) => {
-    // TODO: Update /api/cells/[cellUid]/type
     const res = await axios.put(`/api/cells/${uid}`, body)
     // const res = await fetch(`/api/cells/${cell.uid}`, {
     //     method: 'PUT',

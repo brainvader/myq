@@ -17,20 +17,11 @@ const attachTag = async (uid, tag) => {
     const body = { tag: tag }
     const res = await requestAttachTag(uid, body)
     return res
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
-    const newTag = await res.json()
-    return newTag
 }
 
 const detachTag = async (uid, tag) => {
     const body = { tag: tag }
     const res = await requestDetachTag(uid, body)
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
     return res
 }
 
@@ -79,8 +70,9 @@ export default function TagInput({ quiz }) {
         // never enter empty string
         if (searchTerm === '') return
         if (event.key === 'Enter') {
+            // check if there is inputting tag in database
             const isTag = tags.length === 0 ? false : true
-            // create a new tag node only when there are no once
+            // create a new tag node only when there are no one in database
             if (!isTag) {
                 const newTag = {
                     uid: "_:newTag",
@@ -89,7 +81,6 @@ export default function TagInput({ quiz }) {
                 const res = await attachTag(quiz.uid, newTag)
                 if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
                 setSearchTerm('')
-                mutate(`/api/quizzes/${quiz.uid}`)
             }
         }
     }

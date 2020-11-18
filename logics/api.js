@@ -66,4 +66,15 @@ export const requestAttachTag = async (uid, body) => {
     return res
 }
 
+export const requestDetachTag = async (uid, body) => {
+    const res = await axios.delete(`/api/quizzes/${uid}/tags`, { data: body })
+
+    // const res = await fetch(`/api/quizzes/${uid}/tags`, {
+    //     method: 'DELETE',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(body)
+    // })
+    return res
+}
+
 export const OK = (response) => response.statusText === 'OK'

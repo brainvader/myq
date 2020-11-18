@@ -4,7 +4,7 @@ import { mutate } from 'swr'
 import { Search, Label, List } from 'semantic-ui-react'
 
 import { useTags } from '../lib/hooks'
-import { requestUpdateTitle, OK, requestAttachTag } from '../logics/api'
+import { OK, requestAttachTag, requestDetachTag } from '../logics/api'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
@@ -26,7 +26,7 @@ const attachTag = async (uid, tag) => {
 
 const detachTag = async (uid, tag) => {
     const body = { tag: tag }
-    const res = await fetch(`/api/quizzes/${uid}/tags`, {
+    const res = await requestDetachTag(uid, body)
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -66,7 +66,7 @@ export default function TagInput({ quiz }) {
         const tagIndex = quiz.tags.findIndex(tag => tag.tag_name === tag_name)
         const tag = quiz.tags[tagIndex]
         const res = await detachTag(quiz.uid, tag)
-        mutate(`/api/quizzes/${quiz.uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const keyboardHandler = async (event) => {

@@ -4,6 +4,7 @@ import { mutate } from 'swr'
 import { Search, Label, List } from 'semantic-ui-react'
 
 import { useTags } from '../lib/hooks'
+import { requestUpdateTitle, OK, requestAttachTag } from '../logics/api'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
@@ -14,8 +15,8 @@ const updateTags = (uid, tags) => {
 
 const attachTag = async (uid, tag) => {
     const body = { tag: tag }
-    const res = await fetch(`/api/quizzes/${uid}/tags`, {
-        method: 'PUT',
+    const res = await requestAttachTag(uid, body)
+    return res
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     })
@@ -53,8 +54,8 @@ export default function TagInput({ quiz }) {
         const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
         if (!hasTag) {
             const selectedTag = tags.find(tag => tag.tag_name === tag_name)
-            const tagged = await attachTag(quiz.uid, selectedTag)
-            mutate(`/api/quizzes/${quiz.uid}`)
+            const res = await attachTag(quiz.uid, selectedTag)
+            if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
             setSearchTerm('')
         }
     }
@@ -79,7 +80,8 @@ export default function TagInput({ quiz }) {
                     uid: "_:newTag",
                     tag_name: searchTerm
                 }
-                const tagged = await attachTag(quiz.uid, newTag)
+                const res = await attachTag(quiz.uid, newTag)
+                if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
                 setSearchTerm('')
                 mutate(`/api/quizzes/${quiz.uid}`)
             }

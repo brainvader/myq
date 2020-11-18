@@ -10,23 +10,20 @@ import CellMenu from './cell-menu'
 import CellInput from './cell-input'
 import { InsertBeforeButton, InsertAfterButton } from './cell-button'
 
+import { OK, requestCreateCell } from '../logics/api'
+
 const cellStyle = {
     position: 'relative',
     paddingTop: '2em'
 }
 
-const insertCell = async (uid, nodeName, order) => {
+const insertCell = async (uid, edgeName, order) => {
     const body = {
-        nodeName: nodeName,
+        edgeName: edgeName,
         index: order
     }
-    const res = await fetch(`/api/quizzes/${uid}/q-and-a`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
-
-    mutate(`/api/quizzes/${uid}`)
+    const res = await requestCreateCell(uid, body)
+    if (OK(res)) mutate(`/api/quizzes/${uid}`)
 }
 
 const Cell = ({ cell }) => {

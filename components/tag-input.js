@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import useSWR, { mutate } from 'swr'
+import { mutate } from 'swr'
 
 import { Search, Label, List } from 'semantic-ui-react'
+
+import { useTags } from '../lib/hooks'
+import { OK, requestAttachTag, requestDetachTag } from '../logics/api'
 
 const updateTags = (uid, tags) => {
     mutate(`/api/quizzes/${uid}`, async current => {
@@ -10,47 +13,22 @@ const updateTags = (uid, tags) => {
     }, false)
 }
 
-const tagsFetcher = async (url, searchTerm) => {
-    const path = searchTerm ? `${url}?search=${searchTerm}` : url
-    const res = await fetch(path)
-    return res.json()
-}
-
-const useTags = (url, searchTerm) => {
-    const { data, _, error } = useSWR([url, searchTerm], tagsFetcher)
-
-    return {
-        tags: data || [],
-        isLoading: !error && !data,
-        isError: error
-    }
-}
-
 const attachTag = async (uid, tag) => {
     const body = { tag: tag }
-    const res = await fetch(`/api/quizzes/${uid}/tags`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
-    const newTag = await res.json()
-    return newTag
+    const res = await requestAttachTag(uid, body)
+    return res
 }
 
 const detachTag = async (uid, tag) => {
     const body = { tag: tag }
-    const res = await fetch(`/api/quizzes/${uid}/tags`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-    })
+    const res = await requestDetachTag(uid, body)
     return res
 }
 
 export default function TagInput({ quiz }) {
     const [searchTerm, setSearchTerm] = useState("")
     // get all tags defined
-    const { tags, isLoading, isError } = useTags(`/api/tags`, searchTerm)
+    const { tags, isLoading, isError } = useTags(searchTerm)
 
     if (isError) return <div>failed to load</div>
 
@@ -62,13 +40,19 @@ export default function TagInput({ quiz }) {
 
     // select tag from the candidates
     const selectHandler = async (event, data) => {
-        const tag_name = data.result.title
-        // avoid duplicate tags in the same quiz
-        const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
-        if (!hasTag) {
-            const selectedTag = tags.find(tag => tag.tag_name === tag_name)
-            const tagged = await attachTag(quiz.uid, selectedTag)
-            mutate(`/api/quizzes/${quiz.uid}`)
+        // selected tag name from candidates
+        const selectedTagName = data.result.title
+
+        // check if quiz already has tag selected from candidates
+        const noTag = (quiz.tags || [])
+            .filter(tag => tag.tag_name === selectedTagName)
+            .length === 0
+
+        if (noTag) {
+            // need to retrieve uid from tag name
+            const selectedTag = tags.find(tag => tag.tag_name === selectedTagName)
+            const res = await attachTag(quiz.uid, selectedTag)
+            if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
             setSearchTerm('')
         }
     }
@@ -79,23 +63,24 @@ export default function TagInput({ quiz }) {
         const tagIndex = quiz.tags.findIndex(tag => tag.tag_name === tag_name)
         const tag = quiz.tags[tagIndex]
         const res = await detachTag(quiz.uid, tag)
-        mutate(`/api/quizzes/${quiz.uid}`)
+        if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
     }
 
     const keyboardHandler = async (event) => {
         // never enter empty string
         if (searchTerm === '') return
         if (event.key === 'Enter') {
+            // check if there is inputting tag in database
             const isTag = tags.length === 0 ? false : true
-            // create a new tag node only when there are no once
+            // create a new tag node only when there are no one in database
             if (!isTag) {
                 const newTag = {
                     uid: "_:newTag",
                     tag_name: searchTerm
                 }
-                const tagged = await attachTag(quiz.uid, newTag)
+                const res = await attachTag(quiz.uid, newTag)
+                if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
                 setSearchTerm('')
-                mutate(`/api/quizzes/${quiz.uid}`)
             }
         }
     }

@@ -1,16 +1,14 @@
 import nextConnect from 'next-connect';
 import middleware from '../../../../middleware/database';
 
-// TODO: rename this file to cells
-
 const handler = nextConnect();
 
 handler.use(middleware);
 
-const query = (nodeName) => (`
+const query = (edgeName) => (`
 query cells($uid: string) {
     cells(func: uid($uid)) {
-        ${nodeName} {
+        ${edgeName} {
             uid
             type
             order
@@ -21,21 +19,21 @@ query cells($uid: string) {
 
 const insertCell = async (req, res) => {
     const { uid } = req.query
-    const { nodeName, index } = req.body
+    const { edgeName, index } = req.body
 
     const client = req.dbClient
     const txn = client.newTxn()
 
     try {
         const vars = { $uid: uid }
-        const result = await txn.queryWithVars(query(nodeName), vars)
-        const [{ [nodeName]: cells }] = result.data.cells
+        const result = await txn.queryWithVars(query(edgeName), vars)
+        const [{ [edgeName]: cells }] = result.data.cells
 
         const newCell = {
-            uid: `_:new${nodeName}`,
+            uid: `_:new${edgeName}`,
             type: 'text',
             order: index,
-            content: nodeName === 'question' ? `問${index}` : `答${index}`
+            content: edgeName === 'question' ? `問${index}` : `答${index}`
         }
 
         const newCells = cells.map(cell => {
@@ -46,7 +44,7 @@ const insertCell = async (req, res) => {
 
         const newQuiz = {
             uid: uid,
-            [nodeName]: newCells
+            [edgeName]: newCells
         }
 
         const inserted = await txn.mutate({ setJson: newQuiz, commitNow: true });

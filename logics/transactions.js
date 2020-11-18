@@ -9,10 +9,8 @@ query tag($uid: string) {
 }`
 
 export async function numOfTaggedQuizzes(txn, uid) {
-    console.log(uid)
     const vars = { $uid: uid }
     const quizzesFromTag = await txn.queryWithVars(queryQuizzesFromTag, vars)
-    console.log(quizzesFromTag.data)
     const { tag } = quizzesFromTag.data
     if (tag.length === 0) return 0
 

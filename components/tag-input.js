@@ -6,13 +6,6 @@ import { Search, Label, List } from 'semantic-ui-react'
 import { useTags } from '../lib/hooks'
 import { OK, requestAttachTag, requestDetachTag } from '../logics/api'
 
-const updateTags = (uid, tags) => {
-    mutate(`/api/quizzes/${uid}`, async current => {
-        const newQuiz = { ...current, tags: [...tags] }
-        return newQuiz
-    }, false)
-}
-
 const attachTag = async (uid, tag) => {
     const body = { tag: tag }
     const res = await requestAttachTag(uid, body)

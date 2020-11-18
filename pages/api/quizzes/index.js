@@ -103,7 +103,6 @@ const addQuiz = async (req, res) => {
         res.setHeader('Content-Type', 'application/json')
         res.json({ uid: newQuiz.uid })
     } catch (error) {
-        console.log(error)
         throw error
     } finally {
         await txn.discard()
@@ -134,9 +133,8 @@ async function deleteFile(quiz) {
 
     try {
         await fs.remove(`content/quizzes/${file}`)
-        console.log('success!', file)
     } catch (err) {
-        console.log(err)
+        throw error
     }
 }
 
@@ -200,7 +198,6 @@ const deleteQuizzes = async (req, res) => {
 
                 const tags = (quiz.tags || []).map(tag => {
                     attachedTagUids.add(tag.uid)
-                    console.log(attachedTagUids)
                     return { uid: tag.uid }
                 })
 
@@ -253,7 +250,6 @@ const deleteQuizzes = async (req, res) => {
         res.setHeader('Content-Type', 'application/json')
         res.json({ deleted: deleted })
     } catch (error) {
-        console.log(error)
         throw error
     } finally {
         await txn.discard()

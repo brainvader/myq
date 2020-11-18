@@ -49,11 +49,17 @@ export default function TagInput({ quiz }) {
 
     // select tag from the candidates
     const selectHandler = async (event, data) => {
-        const tag_name = data.result.title
-        // avoid duplicate tags in the same quiz
-        const hasTag = (quiz.tags || []).find(tag => tag.tag_name === tag_name)
-        if (!hasTag) {
-            const selectedTag = tags.find(tag => tag.tag_name === tag_name)
+        // selected tag name from candidates
+        const selectedTagName = data.result.title
+
+        // check if quiz already has tag selected from candidates
+        const noTag = (quiz.tags || [])
+            .filter(tag => tag.tag_name === selectedTagName)
+            .length === 0
+
+        if (noTag) {
+            // need to retrieve uid from tag name
+            const selectedTag = tags.find(tag => tag.tag_name === selectedTagName)
             const res = await attachTag(quiz.uid, selectedTag)
             if (OK(res)) mutate(`/api/quizzes/${quiz.uid}`)
             setSearchTerm('')

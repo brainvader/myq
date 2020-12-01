@@ -9,8 +9,8 @@ import CellFormContext from '../components/cell-form/context'
 import { requestDeleteCell, requestSwapCells, requestUpdateCellType, OK } from '../logics/api'
 
 const cellMenu = {
-    marginTop: `0.5em`,
-    marginBottom: `1em`
+    marginTop: `1em`,
+    marginBottom: `1.5em`
 }
 
 export default function CellMenu({ cell }) {

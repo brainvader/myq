@@ -44,6 +44,11 @@ export const requestDeleteCell = async (uid, body) => {
     return res
 }
 
+export const requestUpdateCells = async (uid, body) => {
+    const res = await axios.put(`/api/cells`, body)
+    return res
+}
+
 // TODO: rename requestUpdateCell
 export const requestUpdateCellType = async (uid, body) => {
     const res = await axios.put(`/api/cells/${uid}`, body)
